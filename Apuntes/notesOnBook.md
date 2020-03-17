@@ -177,4 +177,113 @@ The strengths of Access Control increases as a user's identity is treated with t
 * *It is the same as a "regular" cyber security:* Industrial and business networks are diferent and require diferent security measures to adequately protect them.
 
 
+# 3. Industrial Cyber Security History and Trends
 
+Industrial Network systems differ from commercial network systems in that they are expected to operate for months or even years.
+This is due to the network's requirements of availability.
+
+## Importance of securing industrial networks
+
+Before, physical security was a priority and there exists locked rooms and zones to prevent unauthorised people to enter the secure location.
+Dightal security wasn't a priority because the Industrial Network was air-gapped, but as more modern 'real-time' technology advanced, there needed to be a way of accessing air-tight restricted data, so it was broken.
+
+## The evolution of the cyber threat
+
+* *Cyber Threat:* numerous definitions exist, but all have in common
+
+* Unauthorized access to a system
+* Loss of confidentielity, integrity or availability of the system, it's data or applications
+
+The initial penetration of industrial systems is getting easyer through the evolution and deployment of increasingly complex and sophisticated malware.
+
+The industrial systems at levels 2, 1 and 0 are being increasingly targeted.
+
+The threats continue to evolve, learning from successful techniques from past malware while introducing new capabilities and complexity.
+
+The industrial systems as they stand today simply don't stand a chance against a modern attack capability.
+Their primary line of defense remains the business networks that surround them and network-based defenses between each security level of the network.
+
+### Observations about the attacks
+
+* Most attacks seem to be oportunistic
+* Initial attacks, simpler exploits; Thwarted or discovered attacks, > sofisticated methods
+* majority of cyberattacks -> Finantially motivated
+* Malware samples increase at an alarming rate
+* Majority of attacks originate externally and leverage weak or stolen credentials
+* Majority of incidents affecting industrial systems are unintentional
+* New malware code samples are increasingly more sophisticated
+* Percentage of cyberattacks is high, but has been steadily decreasing
+* Auto-run malware has been rising steadily
+* Malware and Hacking-as-a-service has become more prevalent
+* Remote access incidents have been steadily increasing
+* Pretty straightworward:
+    * Spear phishing
+    * Watering hole
+    * Database Injection
+
+## APT's and weaponized malware
+
+> Advanced Persistent Threats
+
+Stuxnet is an example of an APT and Weaponized malware
+It replicated itself a number of times, and auto-removed itself from the system if it's host was no thte preconfigured target.
+It used 0-days to bypass IDS's and used Digital certificates (Stolen) to pretend it is a authorized program.
+
+![Distinctions between Common APT and Weaponized Malware](./APTWeaponizedComparison.png)
+
+### Night Dragon
+
+Discovered by McAfee, this weaponized malware targeted a series of Oil, Energy, and Petrochemical companies. 
+The attack started with SQLi and pivoted it's way into internal network. 
+They used Command and Control systems, and Remote Administration Toolkits, to recover sensitive information from the companie's executives.
+The goal of the attack, was to gain sensitive information.
+This is a form of cyber-espionage.
+
+### Stuxnet
+
+Game-changer because it was the first targeted, weaponized cyber-attack against an industrial control system.
+
+### Advanced Persistent Threats and Cyber Warfare
+
+Important diferences
+
+* Cyber Warfare is higher in sofistication and in consequences, mostly due to available resources of the attacker and the ultimate goal of destruction versus profit.
+* In many industrial networks, there is less profit available to a cyber-attacker than from others, and so it requires a diferent motive for attack (i.e. Socio-political)
+
+### Defending against modern cyber-threat
+
+Advanced Persistent Diligence requires a strong **defense-in-depth** approach, to reduce the available attack surface for a attacker and to provide a broader perspective of threat activity for use in Incident Response, Analysis, Remediation, Restoration and investigation.
+
+Now, traditional security measures are not enough and we have to use new technologies, such as:
+
+* **Next-generation firewalls (NGFW)**
+* **Unified Threat Management (UTM)**
+* **ICS protocol aware IPS's**
+
+Having situational awareness of what is attempting to connect to the system as well as what is going on within the system is the only way to start to regain control of the network and the system connected to it.
+
+## Insider Threats
+
+> *Insider*: An individual who has approved access, priviledge, or knowledge of information systems, information services, and missions.
+
+This definition can be expanded to the unique operational aspect of ICS to include a wide range of individuals:
+
+* Employees with direct access to ICS components for operation
+* Employees with highly priviledged access for administration and configuration
+* Employees with direct access to ICS data
+* Subcontractors with access to specific ICS components or subsystems for operation
+* Services providers with access to specific ICS components or subsystems for support
+
+Each of these individual can introduce unauthorised data to the system, wich is, in turn focused heavily on preventing outside attack
+
+The Repository of Industrial Security Incidents (RISI) showed in 2013 that only 35% of incidents originated from outsiders.
+The reason is not a intentional will of causing harm to a system, but a result of unintentional or accidental actions directed on the overall security policies deployed within the architecture.
+
+## Hacktivism, Cyber Crime, Cyber Terrorism, and Cyber War
+
+There are vulnerable industrial systems, and because these systems are vulnerable, anyone willing gto perform some research, download some freely available tools, and put forth some effort, can launch an attack. 
+With a minimal knowledge of ICS, the likelyhood of a successfull attack with moderate consequences is significantly increased.
+The real question is one of motive and resources.
+The average person is not motivated enough, a hacktivist group is.
+The average person nay not have the resources to develop a 0-day exploit or execute spear-phishing campaigns, but now, all of these services, are available for hire.
+A fully weaponized attack on a critical infrastructure, no longer needs to be military, because it can be mercenary.
