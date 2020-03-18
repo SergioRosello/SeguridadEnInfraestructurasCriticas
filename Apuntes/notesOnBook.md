@@ -287,3 +287,165 @@ The real question is one of motive and resources.
 The average person is not motivated enough, a hacktivist group is.
 The average person nay not have the resources to develop a 0-day exploit or execute spear-phishing campaigns, but now, all of these services, are available for hire.
 A fully weaponized attack on a critical infrastructure, no longer needs to be military, because it can be mercenary.
+
+# 4. Industrial Control System and Operations
+
+## System Assets
+
+We have to understand the type of devices that are connected to the network:
+
+* Sensors, Actuators, Motor, Drives, Gauges
+* Programmable Logic Controllers (PLC)
+* Remote Terminal Units (RTU)
+* Intelligent Electronic Device
+* Human-Machine Interface
+* Supervisory Workstation
+* Data Historian
+* And others
+
+### Programmable Logic Controller
+
+* used to automate functions within manufacturing facilities.
+* Typically hardened 
+* specialized for a specific use
+* Custom OS, with as little overhead as possible
+* Typically control real-time processes
+
+
+![Contents of a typical PLC](./PLC.png)
+
+#### Ladder Diagrams (LD) 
+
+Is a simplistic programming language included with the IEC-61131-3 standard.
+Can be thought of as a set of connections between inputs (relay contacts) and outputs (relay coils)
+Ladder logic follows a relay function diagram. 
+A path is traced from the left hand side, across "rungs" consisting of varius inputs. 
+If a input relay is true, the path continues.
+If the path to the right side completes, the output coil will be set to true.
+Every step is tested in each scan
+
+![Example of a OR in a Ladder Diagram](./LadderDiagramOR.png)
+
+### Sequential Funtion Charts
+
+*Sequential Logic:* Programming language used by PLC's and defined within the IEC-61131-3 standard 
+
+* Sequential Logic Differs from ladder logic in that each step is executed in isolation and progresses to the next step only upon completion.
+* Very common in batch-oriented operations
+* Can be uploaded the logic by direct serial or ethernet
+* PLC's can hold the code and the compiled logic
+
+### Remote Terminal Unit
+
+* Typically reside in a substation, along a pipeline or some other remote location
+* Monitor field parameters and transmit the data back to the central monitoring station
+* Commonly include a Modem, cellular data connection, radio or other wide area communication technology
+* Typically stored in locations with no access to electricity and may be supplied with it by solar pannels
+* Commonly placed outdoors, dubdued to extreme environmental conditions
+* RTU's and PLC continue to overlap, to the point that a RCU can be thought of as a remote PLC
+
+### Intelligent Electronic Devices
+
+* Electric Utility Sector's take on RTU's.
+* They manage electrical loads and provide local isolation when needed.
+* They can also be installed in areas with high voltage and weather, such as a tower.
+
+### Human Machine Interface
+
+* Used as an operator's means to interact with PLC's, RTU's and IED's.
+* Replace manually activated switches, dials and controls used to sense and influence the process.
+* Come in two predominant form-factors
+    * Runs on Mordern OS and are capable of performing a variety of functions
+    * Combine a Industrial Hardened computer, local touch pannel and is packaged to support door on direct pannel mounting. Typically use embeded OS and are programmed with a separate computer and assotiated engineering software.
+* Used without password, because in a event of a emergency, using a password is unsafe.
+
+### Supervisory Workstations
+
+* Collects information from assets used within a control system and presents that information for supervisory purposes.
+* Is primary read-only
+* Change parameters such as alarm limits for a process
+
+### Data Historian
+
+* Specialized software that collects point values, alarm events, batch records, and systems and stores it in a purpose-built database.
+* Data historized and stored within a historian is refered to as "tags" and can represent almost anything. ( From airflow in a vent to acceptable loss margins) 
+
+Information used by both industrial operations and business management is often replicated across industrial and business networks. This represents a security risk, as a less secure network, such as a business network can provide access to a more secue zone. 
+
+Properly isolating and securing data historian components that connect with assets in les trusted networks within a semitrusted DMZ significantly help to minimize accesibility.
+
+### Business Information Consoles and Dashboards
+
+Consist of the same data presented to a HMI or data historian system, but physically located elswhere, such as a executive office. 
+The physical display in this case, is controled using a secure keyboard video mouse switching system (KVM)
+It can also be presented, using intermediary steps, to a website inside a company's intranet, or a excel sheet. Depending on the complexity of the BICAD's
+
+## System Operations
+
+A typical industrial operation consists of  several layers of programmed logic designed to manipulate mechanical controls in  order to automate the operation.
+Each specific function is automated by what is com- monly referred to as a control loop.
+Multiple control loops are typically combined or  stacked together to automate larger processes
+
+### Control Loops
+
+One of the many automated processes that make up a Industrial Controller.
+The term loop, derives of the ladder-logic widely used in these systems.
+A closed loop is one in wich its output, affects its input.
+Closed loops provide automated control, open loops, provide manual control.
+
+### Control Processes
+
+General term used to define larger automated processes within an industrial operation.
+One control process may be composed of one or more control loops.
+Each process is typically managed using a HMI, which is used to interact with the process.
+
+### Feedback loops
+
+Feedback is generally provided directly from the HMI used to control a specific process.
+
+### Production Information Management
+
+Once historized, the information can be further analyzed using tools, such as Statistical Process Control (SPC) / Statistical Quality Control (SQC), either directly from within the data historian or by using an external analysis tool, such as a spreadsheet.
+Historical data can be replayed at some point in the future to compare past and present plant operations.
+
+### Business Information Management
+
+Operational monitoring and analysis provides valuable information that can be used by plant management to fine-tune operations, improve efficiencies, minimize costs, and maximize profits.
+This drives a need for replication of operational data into the business network.
+By placing an HMI outside of the ICS DMZ, any firewalls, IDS/IPS, and other security monitoring devices that are in place need to be configured to allow the communication of the HMI into and out of the ICS DMZ.
+This effectively reduces the strength of the security perimeter between the industrial and business networks to user authentication only.
+
+## Process Management
+
+An HMI is used by an operator to obtain real-time information about the state of the process to determine whether manual intervention is required to manage the control process by adjusting an output (open loop) or modifying established set points (closed loop).
+
+## Safety Instrumented Systems
+
+Safety instrumented systems (SIS) are deployed as part of a comprehensive risk management strategy utilizing layers of protection to prevent a manufacturing environment from reaching an unsafe operating condition.
+The Basic Process Control System is in charge of mantaining a discrete and continuous control of the process, but i case the process reaches extreme, unstable states, the Safety Instrumented System is deployed. 
+This typically manages a automated shutdown of the process.
+
+There are two risks originate within the SIS related to cyber incidents:
+
+* The prevention of the SIS from properly performing its control functions can allow the plant to transition into a dangerous state that could result in catastrophic events.
+* The SIS can also be used maliciously to cause unintentional equipment or plant shutdowns
+
+In both cases, the need to isolate the SIS  to the gratest extent is a reasonable approach to improving cybersecurity resilience.
+The systems have to be checked periodically to ensure they work. 
+This is a good time to perform security operations such as SW updates and patching.
+
+## The smart grid
+
+The smart grid is complex and highly interconnected. 
+It is not the convergence of a few systems, but of many including customer information systems, billing systems or demand response systems.
+Most of these systems interconnect and intercommunicate with many others.
+The benefits of this allow for intelligent command and control of energy usage, distribution, and billing.
+The disadvantage of such a system is that the same end-to-end command and control pathways could be exploited to attack one, any, or all of the connected systems.
+
+## Network Architectures
+
+The ICSs and operations discussed so far are typically limited to specific areas of a larger network design, which at a very high level consist of business networks, production networks, and control networks.  
+
+In reality, industrial networks consist of multiple networks, and they are rarely so easily and neatly organized.
+
+![Funtional demarcation of industrial networks](./IN.png)
