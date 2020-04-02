@@ -1,0 +1,42 @@
+Buenas, habiendo leído los comentarios anteriores, veo que queda poco que no se haya dicho aun.
+Aun así, me gustaría aportar algunas opiniones personales.
+
+Procederé a responder la pregunta inicialmente planteada, para luego expandir en algunos temas.
+
+Teniendo en cuenta la naturaleza de las infraestructuras criticas, coincido con el resto de mis compañeros en que el factor humano es el principal vector de amenazas a tener en cuenta a la hora de asegurar una red.
+Me refiero a la naturaleza de las redes e infraestructuras criticas porque, como ya se ha mencionado en este debate, tienen una seria de requisitos poco habituales.
+Entre ellos, el mas importante siendo la disponibilidad.
+Una infraestructuras critica (Hablando en términos generales), no puede sufrir parones en el servicio, para actualizar el software de los dispositivos que la forman, ya que sufrir un contratiempo en cualquier actualización de software o firmware, puede suponer consecuencias tan devastadoras como la inhabilitación de una maquina, debido a cualquier intrusión de seguridad.
+
+Dicho esto, cual es la solución:
+En mi humilde opinión, creo que la solución es una fusión de varios conceptos mencionados anteriormente por mis compañeros.
+
+* Una defensa pasiva (a nivel de estructura de la red) y una defensa activa (a nivel de control de acceso a la red) 
+  * Pasiva: Algunos de los ejemplos siendo defensa en profundidad, DMZ. Esto nos ayuda a aislar las capas mas criticas de nuestra red. (Como los componentes, que debido al requisito de la disponibilidad, no se pueden parar y actualizar)
+  * Activa: IPS y demás técnicas de escaneo y detección de comportamientos extraños en redes. Esto nos ayuda a proteger nuestra red del exterior. Ademas, también deberían aplicarse a puntos de paso entre redes dentro de nuestra IC.
+
+* Política de seguridad de mínimo privilegio
+  * Aunque es complicado llevarlo a cabo, dado que hay factores externos, como que el Jefe quiere ver las analíticas de la red en tiempo real, o que, tras la evolución de los requisitos de negocio, ahora es necesario tener disponibilidad de los datos en tiempo real, ya no para el jefe, sino para cualquier usuario de la red (Facturas de agua o de luz).
+  * Tanto lógicas como físicas. Esto quiere decir, que se forme y recuerde a los empleados las buenas practicas. Recordándoles las consecuencias de una mala practica de seguridad.
+  * Si se debe actualizar un sistema critico de forma presencial, requerir una cadena de custodia a la empresa que ofrece el servicio.
+
+Me ha impactado la brevedad y claridad de lo que ha dicho nuestro compañero Augusto: "No somos capaces de equilibrar la seguridad y la productividad".
+No puedo estar mas de acuerdo contigo, aunque dada la naturaleza de dichas infraestructura, la seguridad, debería tenerse mas en cuenta que la productividad.
+La satisfacción inmediata (Productividad y resultados inmediatos) es como una cerilla, prende rápido, pero acaba igual de rápido. La satisfacción a largo plazo (Inversión en seguridad y estabilidad de toda la infraestructura), es como una vela, no es tan espectacular, pero proporciona mas luz durante mas tiempo.
+
+* Legislación a nivel internacional o nacional que garantice el cumplimiento de las políticas de seguridad mínimas
+  * Puesto a que hay lideres que no tienen las aptitudes necesarias para serlo, debe haber algún organismo por encima de su organización, que garantice la correcta gestión de la infraestructura critica.
+
+* Generar una matriz de riesgos
+  * Con esto, podemos saber que partes pueden correr riesgo de ser infectadas, y cuales no. Ademas, basándonos en esta matriz, podemos poner en practica el siguiente punto.
+
+* Redundancia de sistemas
+  * Con una buena gestión de los requisitos y un estudio de las zonas criticas, podemos duplicar nuestros sistemas físicos, para de esta forma, poder actualizarlos en el momento en el que salga un nuevo parche. En el momento en el que sale un parche de seguridad, se actualiza la maquina que no esta operativa, en el momento en el que esta acaba de actualizarse y se han realizado las pruebas pertinentes para asegurar su correcto funcionamiento, se cede el control a esta y se procede a actualizar la otra maquina. De esta forma, podemos actualizar sistemas críticos dentro de infraestructuras criticas, sin parar la producción o monitorización. 
+
+* Concienciación y soporte de los encargados
+  * Todas las medidas mencionadas anteriormente, no se van a poder llevar a cabo, si la persona encargada no tiene en cuenta la seguridad del sistema. Por este motivo, es imperativo que dicha persona este dispuesta a escuchar las opiniones de sus empleados, especializados en dicha materia. La verdadera habilidad de un buen líder esta en saber delegar y escuchar. De nada sirve una sin la otra.
+  * Tomar especial cuidado en los dispositivos los empleados con imagen publica de la empresa, ya que a estos se les pueden dirigir campañas de speerPhishing.
+  * Establecer protocolos para el uso de ordenadores personales en el trabajo
+
+
+Dicho esto, entiendo que a nivel teórico, todo esto puede quedar claro, pero que debido a requisitos de negocio, a un encargado sin aptitudes o a otros factores externos fuera de nuestro control, tenemos que hacer lo que podamos con lo que tengamos.
