@@ -54,7 +54,7 @@ A SCADA system is a ICS, but not all ICS are SCADA.
 
 The various assets that comprise a ICS are interconnected over an industrial Network.
 
-![Sample network connectivity of an ICS](./SimpleIN.png)
+![Sample network connectivity of an ICS](./Images/SimpleIN.png)
 
 Following Stuxnet, there has been a open source revision of the protocols that where in place. These protocols where found to have critical security bugs, which instigated the critical industry sector to migrate to proprietary protocols, often too cost-prohibitive for researches to procure and analyse.
     
@@ -133,20 +133,19 @@ Unlike the Utility networks, they have to secure their intellectual property as 
 The first step is determining what needs to be protected. 
 Identifying the assets that need to be secured and their overall importance to the reliable operation of the overall Integrated System.
 When determining what needs to be protected, we have to map every existing device, and determine if it is a critical asset or not. 
-
-![Diagram to determine critical assets](./DeterminingCriticalAsset.png)
+![Diagram to determine critical assets](./Images/DeterminingCriticalAsset.png)
 
 ### Network Segmentation / Isolation OS Systems
 
 Segmentation of assets into functional groups allows specific services to be tightly locked down and controlled, and is one of the easiest methods of reducing the attack surface that is exposed to potential threat actors. 
 
-![Functional Groups - Done right](./FuntionalGroups.png)
+![Functional Groups - Done right](./Images/FuntionalGroups.png)
 
 ### Defense in depth
 
 A defense in depth strategy should be implemented.
 
-![Defense in Depth](./DefenseInDepth.png)
+![Defense in Depth](./Images/DefenseInDepth.png)
 
 ### Access Control
 
@@ -159,7 +158,7 @@ Considers 3 very important aspects of how a user interacts with resources.
 
 The successful implementation of access control is difficult because of the complexity of managing users and their roles and their mapping to specific devices and services that relate specifically to an employee's operational responsibilities.
 
-![Access Control](./AccessControl.png)
+![Access Control](./Images/AccessControl.png)
 
 The strengths of Access Control increases as a user's identity is treated with the additional context of that user's roles and responsibilities within a functional group.
 
@@ -229,7 +228,7 @@ Stuxnet is an example of an APT and Weaponed malware
 It replicated itself a number of times, and auto-removed itself from the system if it's host was no the preconfigured target.
 It used 0-days to bypass IDS's and used Digital certificates (Stolen) to pretend it is a authorized program.
 
-![Distinctions between Common APT and Weaponed Malware](./APTWeaponizedComparison.png)
+![Distinctions between Common APT and Weaponed Malware](./Images/APTWeaponizedComparison.png)
 
 ### Night Dragon
 
@@ -312,7 +311,7 @@ We have to understand the type of devices that are connected to the network:
 * Typically control real-time processes
 
 
-![Contents of a typical PLC](./PLC.png)
+![Contents of a typical PLC](./Images/PLC.png)
 
 #### Ladder Diagrams (LD) 
 
@@ -324,7 +323,7 @@ If a input relay is true, the path continues.
 If the path to the right side completes, the output coil will be set to true.
 Every step is tested in each scan
 
-![Example of a OR in a Ladder Diagram](./LadderDiagramOR.png)
+![Example of a OR in a Ladder Diagram](./Images/LadderDiagramOR.png)
 
 ### Sequential Function Charts
 
@@ -448,7 +447,7 @@ The ICSs and operations discussed so far are typically limited to specific areas
 
 In reality, industrial networks consist of multiple networks, and they are rarely so easily and neatly organized.
 
-![Functional demarcation of industrial networks](./IN.png)
+![Functional demarcation of industrial networks](./Images/IN.png)
 
 # 5. Industrial Network Design and Architecture
 
@@ -472,7 +471,7 @@ In an industrial network, the availability of data is often prioritized over dat
 As a result, there is a greater use of UDP protocols and fault-tolerant networks interconnecting endpoints and servers.
 Bandwidth and latency are extremely important, as the applications and protocols in use support real-time operations that depend on deterministic communication, often with precise timing requirements.
 
-![Differences in Industrial Network Architecture by form](./DiferencesInINAbyForm.png)
+![Differences in Industrial Network Architecture by form](./Images/DiferencesInINAbyForm.png)
 
 ## Common topologies
 
@@ -484,7 +483,7 @@ Bandwidth and latency are extremely important, as the applications and protocols
 * **Ring topologies:** Each node connected serially, but the end node is connected to the first also. Normally used to interconnect network access switches
 * **Multihoming or Dual-Homing:** Connection of a single node to > 1 networks. 
 
-![Common networks](./CommonNetworks.png)
+![Common networks](./Images/CommonNetworks.png)
 
 ## Network Segmentation
 
@@ -516,7 +515,7 @@ Examples of network segmentation:
 Depending upon how the network infrastructure is configured, the division of the network can be: Absolute, Conditional, Bidirectional, Unidirectional.
 
 
-![Types of communication flow](./CommunicationFlow.png)
+![Types of communication flow](./Images/CommunicationFlow.png)
 
 ## Higher layer segmentation
 
@@ -524,9 +523,9 @@ Normally, network segmentation is enforced at layer 2 (VLANs) or 3 (subnets).
 The containment of certain network activities can be implemented in any layer of the OSI model.
 By limiting sessions and applications at OSI layer 4-7 instead of layers 2-3, it becomes possible to isolate certain communications between fully defined groups of devices, while allowing other communications to operate more freely.
 
-![Types of segmentation 1](./TypesOfSegmentation01.png)
+![Types of segmentation 1](./Images/TypesOfSegmentation01.png)
 
-![Types of segmentation 2](./TypesOfSegmentation02.png)
+![Types of segmentation 2](./Images/TypesOfSegmentation02.png)
 
 ### At what layer should security be implemented?
 
@@ -536,11 +535,146 @@ Risk and vulnerability assessments would help answer the dilemma.
 
 ### Relative benefits of various network segmentation methods
 
-![Characteristics of segmentation](./CharacteristicsOfSegmentation.png)
+![Characteristics of segmentation](./Images/CharacteristicsOfSegmentation.png)
 
-## Physical vs logical segmentation
+### Physical vs logical segmentation
 
+* *Physical segmentation:* use of two separate physical network devices to perform the isolation between networks
+* *Logical segmentation:* Use of logical functions within a single network to achieve the same result
 
+Proper network segmentation is important for both process and control networks that often utilize UDP multicast to communicate between process devices with the least amount of latency.
+Layer 2 network segmentation within a common process may be impossible because it would break up the required multicast domain.
+Communication between control networks and process networks are handled at a higher tier of the overall architecture using layer 3 switching or routing.
+
+Logical segmentation is only allowed between those segments/zones that require minimal security against cyber-threats. To address this risk:
+
+* Implement defense-in-depth security controls at the demarcation points where networks can be segmented.
+* Monitor process network activity
+
+## Network services
+
+When managing multiple networks (Ranging from business to industrial), Domain servers and other identity and access control systems should be maintained separately for the industrial network.
+
+When providing for network network services in industrial systems, abide by the *Principle of least route* which states that in a purpose-built network, a node should only be given the connectivity to perform it's function. (a node must only posses the minimum level of network access that is required for it's individual function)
+
+## Wireless Networks
+
+Any device that is equipped with an appropriate receiver or transmitter and is within the range of an access point can physically receive or transmit wireless signals.
+
+Industrial networks that implement outdoor wireless networks typically conduct thorough radio frequency surveys in order to place antennas in optimized positions and reduce unnecessary exposure to the network. 
+
+In industrial networks, wireless communication is achieved with two implementations:
+
+* *WirelassHART:* Wireless implementation of the HART protocol using IEEE 802.15.4 radio and TDMA communication between nodes
+* *OneWireless:* Implementation of ISA 100.11a wireless mesh network based on IEEE 802.11 a/b/g/n standards and is used to transport common industrial protocols such as:
+    * Modbus
+    * HART
+    * OPC
+    * General Client Interface (GCI)
+    * And other vendor-specific protocols
+
+Both systems support mesh networks and use 2 devices: One for managing connected nodes and communications between nodes, and one to enforce access control and security.
+
+![Wireless HART network](./Images/WirelessHARTNetwork.png)
+
+## Remote access
+
+Necessary evil that must be considered when designing the network. (Incident response and resolution, remote access to engineers for difficult access locations)
+All access points should be considered an attack vector and therefore used only when necessary.
+
+Strict security controls should be used:
+
+* *Minimize attack vectors:* Provide one path over which remote access may occur when implementing a remote access solution.
+* *Follow the principle of leas privilege:* Users only access systems or devices with which they have specific need or authority
+* *segmentation and segregation:* to isolate the systems that allow remote access from other systems not accessed remotely
+* *Application control:* to limit remote users to only those applications with which they are authorized.
+* *Prevent direct access to critical system:* where the risk outweighs the benefits of remote access. Force remote access through a DMZ or proxy, to enforce further security measures.
+* *Remote connection security policy should be >= to the physical connection policy:* Preferred approach is to create a *jump station*, which provides a landing point for the user before he connects to the physical trusted device.
+* *Avoid storing credentials on the remote end of the connection:* even if then are transmitted via secure tunnel.
+* *Ability to terminate and disconnect remote access mechanisms localy:* in the event of a cyber incident
+* *Log everything:* All successful and unsuccessful remote access and activity.
+
+### Performance and considerations
+
+#### Latency and jitter
+
+* *Latency:* The time it takes for a packet to traverse a network from it's source to it's destination host.
+* *Jitter:* Variability of latency over time as large amounts of data are transmitted across the network.
+
+#### Bandwidth and throughput
+
+* *Bandwidth:* The total amount of data that can be carried from one point to another in a given period of time. (Typically measured in Mbps or Gbps)
+  * Is not usually a concern in IN although it may occur in large flat (layer 2) networks (noisy)
+* *Throughput:* volume of data that can flow through a network.
+  * The correlation between bandwidth and throughput is dependent on the size of the packet.
+  * A device is said to have *line rate* throughput when it can transfer data at the full capability of the network interface.
+
+#### Types of service, class of service, and quality of service
+
+* *Quality of Service (QoS):* the ability to differentiate and prioritize some traffic over other traffic.
+* *Type of Service (ToS) and Class of Service (CoS):* provide the mechanisms for identifying the different types of traffic.
+    * CoS is identified at a layer 2  using the 802.1p protocol (Provides a field in the header to differentiate)
+    * ToS is identified in a layer 3 using the 6-bit ToS field in the IPv4 header.
+
+Both ToS and CoS values are used by QoS mechanisms to shape the overall network traffic.
+
+#### Network hops
+
+Every network device the packet encounters must process the packet.
+This adds latency, although most modern network devices are very high performance, and no not add much latency.
+Routers and some security devices that operate at layer 4-7 may incur measurable amounts of latency.
+
+#### Network security controls
+
+Introduce latency to a greater degree than network switches and routers.
+The deeper the inspection, the greater the imposed latency.
+
+### Safety instrumented systems (SIS)
+
+Consists of many of the same types of devices as a ICS.
+Functionally, the SIS is intended to detect a potentially hazardous state of operation, and place the system into a "safe state" before the hazardous state can occur.
+Designed for maximum reliability and include redundancy and self-diagnostics to ensure the SIS is fully functional.
+This requirement is measured as a statistical value called the *Average Probability of Failure on Demand* (PFD).
+This probability is stated as a Safety Integrity Level (SIL) ranging from 1 (PFD of < 10 ^-1)to 4 (PFD of < 10 ^-4)
+
+While SIS cannot protect against cyber attacks directly, they should be able to prevent catastrophe from being caused by a cyber-attack against an industrial process by putting the system into a secure state before the catastrophe can occur.
+General advice:
+
+* When implementing a SIS, do so in a way that a malicious actor who successfully compromises control and process zones will not be able to compromise the SIS.
+* Comply with the Principle of Least Privilege
+* Consider failures and unsafe states when implementing an SIS
+
+### Special considerations
+
+As systems are tuned to specific purposes -such as the advanced metering requirements for the smart grid- specialized networks such as the advanced metering infrastructure (AMI), will evolve to accommodate them.
+It is important to give specialized system their due consideration while continuing to apply the fundamental principles of secure network design.
+
+#### Wide area connectivity
+
+Can be provided by private infrastructure or by leased connectivity from public carriers.
+These connections should therefore be considered higher risk, and extra measures should be taken to ensure confidentiality, integrity, and availability of a WAN connection.
+
+#### Smart grid network considerations
+
+There is one primary quality that is consistent across any smart grid deployment, and that is the scale and accessibility.
+The scale of the smart grid requires the use of some mechanisms to "tier" or hierarchically distribute the nodes.
+
+Scalability also plays a role in the development of smart grid devices, putting significant cost pressure on the end-node devices (smart meters).
+Ant device used at such a large scale needs to be as efficient to build, deploy, operate, and maintain as possible.
+This business driver is a real concern because of the costs ans complexity of providing security assurances and testing throughput the supply, design, and manufacturing stages of smart meter development.
+
+![Smart Grid Attack Surface](./Images/SGAttackSurface.png)
+
+#### Advanced metering infrastructure
+
+Are used by electric, water and gas utilities.
+Highly Distributed, Massively scalable, uses specialized systems and protocols, presents a number of security and privacy considerations, and extremely accessible.
+
+Advanced metering infrastructure architecture consists of smart meters, a communication network, and a AMI server or headend. 
+
+* Smart meter: digital device for real time data collection, a microprocessor and a local memory, and a network interface to connect to the headend.
+* Headend: AMI server (Collection of metered data), Meter Data Management System (MDMS) (shares with billing systems, historians). Intercommunicates with many other systems in the smart grid (Transmission and distribution ICS servers, energy management systems (EMS), in home networks and many others).
+* The potential for exploitability is big, given the business requirements, low cost, and number of devices. Also it's proprietary protocols.
 
 
 # 6. Industrial Network Protocols
