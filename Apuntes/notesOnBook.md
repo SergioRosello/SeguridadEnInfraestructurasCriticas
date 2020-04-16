@@ -679,4 +679,249 @@ Advanced metering infrastructure architecture consists of smart meters, a commun
 
 # 6. Industrial Network Protocols
 
+Industrial Protocols are designed for real-time operation to support precision operations involving deterministic communication of both monitoring and control data.
+This means that most industrial protocols forgo any feature (Authentication / encryption) or function that is not absolutely necessary for the sake of efficiency.
+Many of these protocols have been modified to run over Ethernet and Internet Protocol (IP) networks as suppliers moved away from proprietary networks.
+
+## Overview of industrial network protocols
+
+> Real-time communications protocols, developed to interconnect the systems, interfaces, and instruments that make up an industrial control system. 
+
+Will be divided into:
+
+* Fieldbus protocols
+    * FOUNDATION Fieldbus, CIP, PROFIBUS/PROFINET, P-NET, WorldFIP, INTERBUS, CC-Link, HART, SERCOS
+    * Commonly used to connect process-connected devices (e.g. Sensors) to basic control devices (e.g. PLC), and control devices to supervisory systems (e.g. ICS server, HMI, historian)
+* Backend protocols
+    * Deployed on or above supervisory networks, and are used to provide efficient system-to-system communication as opposed to data access.
+    * Commonly used to connect a historian to an ICS server, connecting a ICS from one supplier to another supplier's systems, or connecting two ICS operation control centers.
+
+The most important protocols:
+
+* **Fieldbus**:
+    * Modicon Communication Bus (Modbus)
+    * Distributed Network Protocol (DNP)
+* **Backend**:
+    * Open Process Communications (OPC)
+    * Inter-Control Center Protocol (ICCP)
+
+Because they represent some unique qualities:
+
+* Each is used in different areas within an industrial network
+* Each provides different methods of verifying data integrity and/or security
+* The specialized requirements of Industrial Network (Rea-time synchronous communication) often make them highly susceptible to disruption
+
+### Fieldbus Protocols
+
+#### Modicon Communications bus
+
+Designed in 1979 to enable process controllers to communicate with real-time computers, and remains one of the most popular protocols used in ICS architectures.
+
+##### What it does:
+
+Operates at layer 7 of the OSI model.
+Extremely simple devices, such as sensors or motors, use Modbus to communicate with more complex computers
+
+##### How it works:
+
+Request/response protocol using 3 distinct protocol data units (PDU):
+
+* Modbus Request 
+* Modbus Response
+* Modbus Exception Response
+
+![Modbus protocol transaction](./Images/Modbus protocol transaction.png)
+
+Function codes and data requests can be used to perform a wide range of commands:
+
+* Read the value of a single register
+* Write the value of a single register
+* Read a block of values from a group of registers
+* Write a block of values from a group of registers
+* Read files
+* Write files
+* Obtain device diagnostic data
+
+##### Variants:
+
+* Mobdus RTU and Modbus ASCII
+
+> Variants of Modbus made to work in asynchronous serial communications.
+
+> * Modbus RTU: Supports Binary
+* ModbusASCII: Supports ASCII (X2 the size of Modbus RTU (Due to Hex encoding vs Binary))
+
+* Modbus TCP: 
+
+> * Modbus TCP: Supports IP
+
+> Come in two forms, the *basic* form takes the original protocol and applies a Modbus Application Protocol (MBAP) to create a new frame. Common with old, legacy HW.
+ModbusTCP is the more common and removes the legacy address and error checking and uses only the Modbus PDU with a MBAP header.
+
+* Modbus Plus or Modbus+: 
+
+> Uses token passing mechanisms to send embedded Modbus messages
+
+##### Where is is used:
+
+Typically deployed between PLC's (slave) and HMI's (Master), or between a master PLC and several slave devices.
+
+![Modbus use within a IN](./Images/ModbusUseWithIN.png)
+
+##### Security concerns:
+
+* Lack of authentication - Only require the use of valid Modbus address, function code, and associated data.
+* Lack of encryption - Commands and address are transmitted in clear text
+* Lack of message checksum (Modbus/TCP only) - Command can easily be spoofed
+* Lack of broadcast suppression - All serially connected devices will receive all messages
+
+##### Security recommendations:
+
+* Should be used to communicate within a set of known devices
+* Provide access control with filtering capabilities and filter:
+    * Modbus TCP packets are the wrong size
+    * Function codes that force devices into a "listen only" mode
+    * Function codes that restart communications
+    * Function codes clear, erase or reset diagnostic information, such as counters and diagnostic registers
+    * Function codes that request information about Modbus server
+    * Any message with an Exception code PDU
+    * Modbus traffic from a server to many slaves
+    * Modbus requests for lists of defined ports and their values (Conf scan)
+    * Commands to list all available function codes (Conf scan)
+
+#### Distributed network protocol (DNP / DNP3)
+
+Serial protocol designed for use between master stations and slave devices (Outstations).
+The primary motivation for this protocol is to provide reliable communication in environments common with the electric utility industry that include high levels of electromagnetic frequency and poor transmission media.
+Extended to work over TCP/IP.
+Now used by electric, oil, gas, water and wastewater industries.
+Unlike Modbus and ICCP, DNP3 is bidirectional (Supporting communications from master to slave and from slave to master) and supports exception-based reporting
+
+##### What it does:
+
+Used to send and receive messages between control system devices.
+The link-layer frame ( or LPDU) header and the data payload contain CRC's and the data payload actually contains a pair of CRC octets for every 16 data octets. 
+This provides a high degree of assurance that any communication errors will be detected.
+It is still possible to loose a packet
+Each frame consists of a multi-part header and a data payload.
+The frame header contains well-defined function code, which can tell the recipient whether it should confirm, read, write, select a specific point, operate a point, and more.
+The data payload of the frame support analog data, binary data, files, counters and other types of data objects.
+
+##### How it works:
+
+DNP3 provides a method to identify the remote device's parameters and then use message buffers corresponding to event data classes 1 - 3 in order to identify incoming messages and compare them to known point data.
+In this way the paster station is only required to retrieve new information resulting from a point change or changes event on the outstation.
+
+When a change occurs on an outstation, a flag is set to the appropriate data class.
+The master station is then able to poll only those outstations where there is new information to be reported.
+This directly results in improved responsiveness and more efficient data exchange.
+
+##### Secure DNP3:
+
+Adds authentication to the response/request process
+Authentication occurs using a unique session key that is hashed together with message data from the sender and from the challenger.
+The result is an authentication method that verifies authority, integrity, and pairing at the same time.
+
+![DN3 protocol framing](./Images/DN3ProtocolFraming.png)
+
+##### Where is is used:
+
+Between a master control station and a RTU in a remote station.
+Transmission medium can include wireless, ratio and dial-up.
+Also widely used to interconnect RTU and IED.
+
+![DN3 Use](./Images/DN3Use.png)
+
+##### Security concerns:
+
+No inherent authentication or encryption within DNP3.
+Examples of manipulations:
+
+* Turning off unsolicited reporting to suppress alarms
+* Spoofing unsolicited responses to the master, to trick the operator into performing inappropriate actions.
+* Issuing unauthorised stops, restarts, or other functions that could disrupt operations
+
+##### Security recommendations:
+
+Implement only secure DNP3 or TLS if not possible.
+DNP3 stations and outstations should be isolated into a unique zone consisting only of authorized devices and the zones should be thoroughly secured using standard defense-in-depth best practices, including a industrial firewall.
+Look for, and decline access with specific function calls and behaviours:
+
+* Use of any non-DNP3 communication on a DNP3 port
+* Use of configuration function 23 (Disable unsolicited response)
+* Use of control function codes 4, 5 or 6 (Operate, Direct Operate, and Direct Operate without Acknowledgement)
+* Use of application control function 18 (Stop Application)
+* Multiple unsolicited responses over time (Response storm)
+* Any unauthorised attempt to perform an action requiring authentication
+* Any Authentication failures
+
+#### Process fieldbus
+
+Most used variant is PROFIBUS DP, which has 3 variants PROFIBUS DP-V{0..2}.
+There are also three profiles for PROFIBUS communication: asynchronous, synchronous and over Ethernet (PROFINET).
+PROFIBUS is a master-slave protocol that supports multiple master nodes through the use of token sharing (When a master has control of the token, it can communicate with the slaves)
+A master PROFIBUS node is typically a PLC or RTU, and a slave is a sensor, motor, or some other control system device.
+
+![PROFIBUS DP communications](./Images/PROFIBUSCommunications.png)
+
+##### Security concerns:
+
+PROFIBUS lacks authentication inherent to many of its functions, allowing a spoofed node to impersonate a master node, which in turn provides control over all configured slaves.
+(PROFIBUS DP utilizes DP network, therefore, the attacker has to physically there. This reduces the attack options)
+
+##### Security recommendations:
+
+The network and connected devices are very susceptible of attack if unauthorised physical access is obtained.
+
+#### Industrial ethernet protocols
+
+
+
+* **Ethernet Industrial Protocol:** <++>
+    * **Security concerns:** <++>
+    * **Security recomendations:** <++>
+* **Profinet:** <++>
+    * **Security concerns:** <++>
+    * **Security recomendations:** <++>
+* **Ethercat:** <++>
+    * **Security concerns:** <++>
+    * **Security recomendations:** <++>
+* **Ethernet Powerlink:** <++>
+    * **Security concerns:** <++>
+    * **Security recomendations:** <++>
+* **SERCOS III:** <++>
+    * **Security concerns:** <++>
+    * **Security recomendations:** <++>
+
+### Backend Protocols
+
+#### Open Process Communications:
+
+    * **What it does:** <++>
+    * **How it works:** <++>
+    * **Where is is used:** <++>
+    * **Security concerns:** <++>
+    * **Security recomendations:** <++>
+
+#### Inter-control center Communications Protocol:
+
+    * **What it does:** <++>
+    * **How it works:** <++>
+    * **Where is is used:** <++>
+    * **Security concerns:** <++>
+    * **Security improvements over Modbus and DNP:** <++>
+    * **Security recomendations:** <++>
+
+### Advanced Metering Infrastructure and the Smart Grid
+
+* **Security concerns:** <++>
+* **Security recomendations:** <++>
+
+### Industrial Protocol Simulators
+
+* **Modbus:** <++>
+* **DNP3/IEC60870-5:** <++>
+* **OPC:** <++>
+* **ICCP/IEC60870-6:** <++>
+* **Physical Hardware:** <++>
 
