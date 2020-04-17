@@ -873,55 +873,264 @@ PROFIBUS lacks authentication inherent to many of its functions, allowing a spoo
 
 The network and connected devices are very susceptible of attack if unauthorised physical access is obtained.
 
-#### Industrial ethernet protocols
+### Industrial ethernet protocols
 
+Term used to reference the adaptation of the IEEE 802.3 Ethernet standard to real-time industrial automation applications.
+One of the goals was to go from a asynchronous standard to a synchronous one.
+Industrial Ethernet also provides physical enhancements to "harden" the office grade nature of standard Ethernet technologies with ruggedized wiring, connectors and hardware designed for industrial use.
 
+![Real-time Ethernet Implementations](./Images/Real-timeEthernetImplementations.png)
 
-* **Ethernet Industrial Protocol:** <++>
-    * **Security concerns:** <++>
-    * **Security recomendations:** <++>
-* **Profinet:** <++>
-    * **Security concerns:** <++>
-    * **Security recomendations:** <++>
-* **Ethercat:** <++>
-    * **Security concerns:** <++>
-    * **Security recomendations:** <++>
-* **Ethernet Powerlink:** <++>
-    * **Security concerns:** <++>
-    * **Security recomendations:** <++>
-* **SERCOS III:** <++>
-    * **Security concerns:** <++>
-    * **Security recomendations:** <++>
+#### Ethernet Industrial Protocol:
+
+CIP, also known as Control and Information Protocol, is a publicly available protocol managed through the Open Device Vendors Association (ODVA).
+CIP is an application layer protocol that provides a consistent set of messages and services that can be implemented in a variety of ways using different network and link layer techniques, all supporting interoperability.
+CIP supports integration of I/O, control, data collection, and device configuration on a single network.
+
+![Overview of CIP](./Images/CIP.png)
+
+EtherNet/IP uses standard Ethernet frames in conjunction with the CIP suite to communicate with nodes.
+EIP supports everything CIP implements.
+
+CIP uses object models to define the various qualities of a device.
+Each CIP object possesses attributes (data), services (commands), connections, and behaviours (relationships between attributes, values and services)
+There are 3 types of objects:
+
+* Required objects
+
+> Define attributes such as device identifiers (Manufacturer, serial number, date of manufacture) (Identity object), routing identifiers, and physical connection data.
+
+* Application objects
+
+> Define input and output profiles for devices
+
+* vendor-specific Objects
+
+> Enable vendors to add proprietary objects to a device
+
+The wide adaptation and standardization of CIP has resulted in an extensive library of device models which can facilitate interoperability, but can also aid in control network scanning and enumeration.
+
+##### Security concerns:
+
+* Susceptible to any of the vulnerabilities of Ethernet.
+* The CIP does not define any implicit or explicit mechanisms for security
+* Use of common device objects can facilitate device identification and enumeration
+
+##### Security recommendations:
+
+* Real-time ethernet protocol using TCP and UDP transports making it necessary to provide Ethernet and IP-based security at the perimeter of any EIP network.
+* Consideration to put EIP devices inside a dedicated zone with packet monitoring.
+
+#### PROFINET:
+
+Designed for scalability.
+3 versions.
+
+> 1 - built on top of TCP/IP
+2 - RT technology bypasses OSI layers 3 and 4
+3 - requires specific hardware, and is a OSI layer 2.
+
+![PROFINET versions](./Images/PROFINET.png)
+
+##### Security concerns:
+
+Real-time Ethernet protocol, therefore is susceptible to any of the vulnerabilities of Ethernet.
+
+##### Security recommendations:
+
+* Lack of authentication protocols requires strong isolation of the bus.
+* Careful consideration of the zones and conduits.
+* Monitoring of the network: Firewalls, ICS-aware IPS's. 
+
+#### Ether cat:
+
+Real-time Ethernet-based fieldbus protocol classified as "Industrial Ethernet"
+Can be used directly in a Ethernet frame or encapsulated as a UDP payload over port 34980.
+Only 1-2 Ethernet frames are required for a complete cycle, allowing for very short cycle times. (Meeting IEEE Precision Time Protocol (PTP) requirements without specific HW)
+
+##### Security concerns:
+
+* Susceptible to any vulnerabilities found in standard Ethernet.
+* No inherent network-layer mechanism for reliability, ordering, or data integrity checks.
+* Susceptible to DoS, and MitM attacks.
+
+##### Security recommendations:
+
+* Provide Ethernet-based security at the perimeter of the network
+* Use passive network monitoring
+* ICS-aware IPS
+
+#### Ethernet Power link:
+
+* Fast Ethernet as the basis for real-time transmission of control messages via direct encapsulation of ethernet frames.
+* Communication is divided into 3 time periods:
+    * Transmission of a Master "Start of cycle" frame
+    * Slave response if received a poll request frame
+    * Asynchronous communication
+
+##### Security concerns:
+
+* Susceptible to any vulnerability of Ethernet communication
+* Susceptible to DoS attacks
+
+##### Security recommendations:
+
+* Clear demarcation, based on the cyclic polling mechanism.
+* Static Ethernet address tables
+* Establish appropriate security zones
+
+#### SERCOS III:
+
+> Serial Real-time Communication System is a standardized open digital interface for communication between industrial controls, motion devices, and I/O devices. 
+
+* Version 3 is a "Industrial Ethernet"-based implementation of the SERCOS interface that supports deterministic real-time control of motion and I/O applications.
+* Master - slave protocol that operates cyclically
+
+##### Security concerns:
+
+* Susceptible to any of the vulnerabilities of other forms of Ethernet communication.
+* Introduces new security concerns through the option to perform embedded TCP or UDP communications.
+
+##### Security recommendations:
+
+* Deploy static Ethernet-based tables 
+* IP channel should be restricted or avoided
+* Strong perimeter defenses
+* Active monitoring
 
 ### Backend Protocols
 
 #### Open Process Communications:
 
-    * **What it does:** <++>
-    * **How it works:** <++>
-    * **Where is is used:** <++>
-    * **Security concerns:** <++>
-    * **Security recomendations:** <++>
+OLE (Object Linking and Embedded) for Process Control is not an Industrial Protocol, but "a series of standard specifications" designed to simplify integrations of various forms of data on the systems from different vendors.
+Most embedded systems don't use Microsoft technology, but until the creation of OPC, they had to.
+This protocol enhances the communication model, and adds better security.
 
-#### Inter-control center Communications Protocol:
+##### What it does:
 
-    * **What it does:** <++>
-    * **How it works:** <++>
-    * **Where is is used:** <++>
-    * **Security concerns:** <++>
-    * **Security improvements over Modbus and DNP:** <++>
-    * **Security recomendations:** <++>
+Designed to provide a higher level of integration between systems and subsystems, vs a fieldbus, that generally provides low-level data access and configuration.
+OPC was motivated by the needs of end "users" and not system "vendors" to provide a common communication interface between diverse ICS components.
+
+##### How it works:
+
+Client-server manner, a client application calls a local process, bot instead of executing the process using local code, the process is executed on a remote server.
+The remote process is linked to the client application and is responsible for providing the necessary parameters and functions to the server, utilizing a remote procedure call (RPC)
+
+![OPC protocol operation](./Images/OPC.png)
+
+OPC makes it difficult for Industrial Networks, because it has de ability to change ports.
+
+##### Where is is used:
+
+Commonly used within industrial networks, including data transfers to historians, data connection within HMI's, connectivity between serial fieldbus protocols like Modbus and DNP3 and ICS servers and other supervisory controls.
+
+##### Security concerns:
+
+* Highly vulnerable to attack using multiple vectors as it is subject to the same vulnerabilities as the more ubiquitously used OLE.
+* Difficult to upgrade
+* RPC vulnerabilities - OPC uses RPC making it susceptible to all RPC-related vulnerabilities
+* Unnecessary ports and services
+* OPC server integrity - Can create a rogue server and use to disrupt service and DoS.
+
+##### Security recommendations:
+
+* Use OPC-UA when possible
+* All unnecessary ports and services should be removed from the OPC server
+* OPC servers should be isolated into a unique zone consisting only of authorized devices
+* Secure zones with Defense-in-depth practices
+* Use Firewalls
+
+#### Inter-control center Communications Protocol (ICCP):
+
+Designed for communication between control centers within the electric utility industry.
+Designed for bidirectional Wide Area Network (WAN) communication between a utility control center and other control centers, power plants, substations, and even other utilities.
+A common protocol was needed to allow for reliable and standardized data exchange between utility control centers. 
+Especially when the control centers are operated by different owners.
+
+##### What it does:
+
+* Establishes a connection
+* Accesses information (read requests)
+* Information transmission
+* Notification of changes / alarms and other exceptional conditions
+* Configuration of remote devices
+* Control of operating programs
+
+##### How it works:
+
+Client-server model.
+One control center is the client and another, the server.
+ICCP is a unidirectional protocol, but most implementations, support both functions, allowing a single ICCP device to function as both client and server
+
+##### Where is is used:
+
+* Widely used between control system zones and between distinct control centers.
+
+![ICCP use example](./Images/ICCPUse.png)
+
+##### Security concerns:
+
+Susceptible to spoofing and session hijacking because of:
+
+* Lack of authentication and encryption
+* Explicitly defined trust relationships
+
+##### Security improvements over Modbus and DNP:
+
+* Uses bilateral tables. Provides more control
+* Secure version of ICCP exists that incorporates digital certificate and encryption
+
+##### Security recommendations:
+
+* Use Secure ICCP variants whenever possible
+* Patch known vulnerabilities
+* Isolated into a unique zone consisting of only client-server pairs
+* Monitor ICCP traffic (Deep packet inspection)
 
 ### Advanced Metering Infrastructure and the Smart Grid
 
-* **Security concerns:** <++>
-* **Security recomendations:** <++>
+The smart grid is a widely distributed communication network that touches power generation and transmission systems, along with many end-user networks.
+
+An example of the protocols in use by a smart-grid:
+
+![Smart grid operational areas and protocols](./Images/Smart-grid.png)
+
+##### Security concerns:
+
+* Smart meters are readily available and therefore require board- and chip-level security in addition to network security.
+* Smart grid protocols vary widely in their inherent security and vulnerabilities
+* Neighborhood, home, and business LANs can be used to ingress to the AMI
+
+##### Security recommendations:
+
+* Perform risk and threat analysis in the planning stages
+* Same for end users (Power plants, factories, homes)
+* Strong defense-in-depth and in perimeter will help mitigate the risk
 
 ### Industrial Protocol Simulators
 
-* **Modbus:** <++>
-* **DNP3/IEC60870-5:** <++>
-* **OPC:** <++>
-* **ICCP/IEC60870-6:** <++>
-* **Physical Hardware:** <++>
+##### Modbus:
+
+* Modus Pal 
+* Triangle Microworks Communication Protocol Test Harness
+* Modsak
+
+##### DNP3/IEC60870-5:
+
+* The Axon Group
+* Communication Test Harness, from Triangle Microworks
+
+##### OPC:
+
+* Matrikon
+* Kepware
+
+##### ICCP/IEC60870-6:
+
+* Triangle Microworks IEC 6087-6 (TASE.2/ICCP) Test Tool
+
+##### Physical Hardware:
+
+* Not overly expensive, if you want to test, but can't reproduce a entire network, like with simulators
+* Purchasing through eBay might help
 
