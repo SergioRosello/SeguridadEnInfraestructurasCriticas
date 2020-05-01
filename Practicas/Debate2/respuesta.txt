@@ -1,0 +1,52 @@
+- Diseño de las redes supe escrupuloso y contrastado anteriormente con varios expertos
+- Posible publicación de esquema de red a la comunidad de código abierto?
+  - Ventajas:
+    - Hachero ne
+    - Auditoria gratis
+    - Si te entran, la comunidad puede ayudar a solucionar el problema
+    - Detección de fallos de diseño por parte de expertos en la comunidad
+    - Si te van a hachear, es quistión de tiempo que lo consigan 
+  - Desventajas:
+    - No siempre es posible, debido a secretos empresariales
+- La formación es importante, pero cualquier persona encargada de montar una red ICS ya sabe lo que debería
+- Tener un departamento que se encargue de la monitorización de la red e intentar tirarla (red team / blue team) como dice José Maria Montes
+  - Muy importante la carta blanca que tiene el equipo de seguridad red-team. Debe de ser capaz de demostrar que una vulnerabilidad existe y llevarla a cabo si es necesario para demostrarla
+  - Incluye herramientas de trabajo como Nessus en los blue team
+
+  Respuesta a José Ángel Navarro
+
+  Buenas, lamento contestarte tan tarde, no me ha sido posible hacerlo antes.
+  La verdad es que tu comentario me ha hecho pensar en varias formas de seguridad
+  Cuando dices que "El software no puede ser probado por las mismas personas que lo desarrollan" tienes toda la razón.
+  Entendiendo que una ICS es altamente sensible y que no se podría aplicar lo expuesto mas abajo a todas:
+  A riesgo de generar controversia, os planteo lo siguiente:
+    - Hacer un ICS de código abierto/infraestructura abierta
+      - Ventajas:
+        - BugBounty (Recompensar económicamente al Hacker)
+          - Si la motivación es política y los recursos económicos inmensos, como en el caso de Stuxnet por ejemplo, mas tarde o mas temprano, consiguen entrar, ya que no existe escasez de motivación, puesto que es un trabajo asalariado por una organización o gobierno
+          - Como dice Edsger Dijkstra, "If debugging is the process of removing bugs. Then programming must be the process of putting them in."
+          - De esta forma, abriendo tu esquema de red, puedes contraatacar con motivación económica para la gente u organizaciones que consigan sacar un fallo o error en tu esquema de red o red.
+        - Auditoria por parte de expertos del sector e iniciativa a el resto de empresas a que sigan tus pasos.
+          - ya que tenemos tema de proverbios, me viene a la mente el siguiente:
+            - "Si caminas solo, irás más rápido; si caminas acompañado, llegarás más lejos"
+              - Si vamos todos a una para expandir nuestros conocimientos (Escasos de los ICS (Puede que debido al secretismo por el que son conocidos)) sobre como defender e implementar un buen ICS, seguro que llegamos mas lejos y no caemos dos veces en el mismo error (Como sector, no como empresa)
+        - Si te entran, la comunidad puede ayudar a solucionar el problema.
+          - Se genera interés por parte de los profesionales del sector.
+            - Se genera el compañerismo entre los mismos e incita a el dialogo
+      - Desventajas:
+        - No siempre es posible, debido a secretos empresariales o requisitos de las ICS.
+          - Entiendo que una ICS dedicada a energía Nuclear, no pueda exponer su red, por el peligro de que un actor malicioso entre en ella y la lié.
+      
+Para mi, mantener el código/estructura/diseño/X abierto siempre tiene mas ventajas que desventajas, aunque entiendo que hay situaciones en las que sea imposible hacerlo.
+
+Una alternativa a esto, es el uso de equipos red team dedicados únicamente a intentar vulnerar la red.
+Esto tiene las ventajas de los BugBounty, sin los riesgos asociados a tener el código/X abierto.
+Una forma de implementar esta idea en una organización seria:
+  - Si tenemos un equipo de 4 empleados dedicados al análisis de seguridad en nuestra organización, separamos el equipo en dos, de forma que dos de estos miembros se dediquen durante unas semanas a ser red team y los otros dos a ser blue team. Rotando tanto los roles como los miembros de cada equipo. Esto consigue un intercambio de ideas, tanto para defender, como para atacar el sistema. Lo que una semana aprende un equipo, cuando sea este blue team, ya sabe que tiene que estar atento a esa estrategia. Cabe destacar, que el ejercicio de intrusión no acaba en el espacio virtual, sino que también se tienen que llevar a cabo pruebas de intrusión físicas a las zonas criticas.
+ 
+En este momento, todos los descubrimientos y estrategias desarrolladas tanto por los equipos red team como blue team, se vuelven a "introducir" en el sistema, para que en siguientes iteraciones del ciclo de vida de seguridad ya se contemplen y se pueda construir siempre sobre lo aprendido.
+
+Como se ha dicho aquí anteriormente, es importante que haya presupuesto para estos equipos y para las herramientas que tienen que usar, como Nessus.
+Para llegar a conseguir lo que propongo, creo que hacen falta nuevas generaciones de "jefes", que aprecien el valor del intercambio de ideas para el progreso de la misma industria.
+
+Entiendo que mi proposición parezca muy ideal, pero creo que, como se ha demostrado reiteradas veces, en el mundo del software (GNU/Linux, Apache, RedHat, entre otros) el mundo de la arquitectura abierta, tienen también gran potencial. 
