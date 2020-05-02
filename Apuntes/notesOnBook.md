@@ -1134,3 +1134,199 @@ An example of the protocols in use by a smart-grid:
 * Not overly expensive, if you want to test, but can't reproduce a entire network, like with simulators
 * Purchasing through eBay might help
 
+# 7. Hacking Industrial Control Systems
+
+## Motives and consequences
+
+### Consequences of a successful cyber incident
+
+* Delay, block or alter the intended process: Amount of energy produced
+* Delay, block or alter information related to a process: Preventing efficient production metrics
+* Unauthorized changes to instructions or alarm thresholds: Damage, disable plant
+* Inaccurate information sent to operators: Disguise changes or cause the operator to initiate inappropriate actions
+
+![Potential impact of a successful Cyber-Attack](./Images/7 - impactOfCyberAttack.png)
+
+There are studies that show the successful hacking of a ICS
+
+* *Sandia National Laboratories:* Showed that a simple man-in-the-middle attack can alter values, which can reduce expected output.
+* *VIKING:* Investigate whether the manipulation of input data can alter the normal control loop functions, ultimately causing a disturbance.
+
+## Common Industrial Targets
+
+Despite being different, there are several systems that are prone to be targeted:
+
+* *Network Services:* Active directory, Identity and Access management servers. Because they may be shared between business ans ICS networks.
+* *Engineering workstations:* Used to exfiltrate or alter process logic.
+* *Operator Consoles:* Used to trick human operators into performing unintended task
+* *Industrial Applications:* SCADA servers, Historians, asset management
+* *Protocols (Modbus, DNP3, EtherNet, etc.):* Used to alter, manipulate, blind or destroy almost any aspect of a ICS
+
+![Attack Targets](./Images/7 - AttackTargets01.png)
+
+![Attack Targets](./Images/7 - AttackTargets02.png)
+
+![Attack Targets](./Images/7 - AttackTargets03.png)
+
+![Attack Targets](./Images/7 - AttackTargets04.png)
+
+![Attack Targets](./Images/7 - AttackTargets05.png)
+
+![Attack Targets](./Images/7 - AttackTargets06.png)
+
+![Attack Targets](./Images/7 - AttackTargets07.png)
+
+![Attack Targets](./Images/7 - AttackTargets08.png)
+
+![Attack Targets](./Images/7 - AttackTargets09.png)
+
+![Attack Targets](./Images/7 - AttackTargets10.png)
+
+![Attack Targets](./Images/7 - AttackTargets11.png)
+
+## Common Attack Methods
+
+Important to know the Difference between compromising, and attacking a target.
+
+* *Compromising:* Ability to exploit a target and perform an *unknown* action
+* *Attacking:* Causing the target to perform a *undesirable* action
+
+Many ICS devices can be attacked via the *exploitation of functionality* versus the *exploitation of vulnerabilities*. (Issuing a *Shutdown* command)
+
+### Man-in-the-middle attacks
+
+Very straightforward process if the communication between systems runs on unencrypted protocols.
+The biggest challenge to a successful MitM attack is to successfully insert oneself into the message stream, which requires establishing trust.
+
+### Denial-of-service attacks
+
+When a malicious event attempts to make a resource unavailable.
+A Well targeted DoS can trigger a shutdown given that the controller enters a state called LoC (Loss of Control) which in turn forces it to enter a safe state: Shutdown.
+If the DoS is performed against a HMI, this is called LoV (Loss of View) and can also trigger a shutdown given the operators can not monitor what is happening.
+
+### Replay attacks
+
+It is possible to capture packets and then replay them to accomplish the same action.
+If these packets are part of a authentication mechanism, they provide the hacker a authentication mechanism.
+Now he can authenticate in the network and be regarded as a trusted peer
+This is called: *Exploitation of functionality*
+
+Replay attacks are useful given the command-and-control nature of the ICS.
+
+For the subtle manipulation of industrial systems, knowledge of specific ICS operations is required, but to sabotage a system, almost anything can be used to disrupt operations.
+
+### Compromising the HMI
+
+One of the easiest ways to obtain unauthorised Command and Control of an ICS is to leverage the capabilities of human-machine interface (HMI) console.
+
+A known device vulnerability is exploited to install remote access to the console leading to the host *compromise*. (Use MSf to exploit the target system and install a remote VNC server.
+
+### Compromising the Engineering Workstation (EWS)
+
+Similar to HMI
+Important to realise the EWS has important confidential documentation (Design, configuration, plant operation) that make the target a much higher-valued asset than a HMI.
+
+### Blended attacks
+
+A *Blended threat* is an exploit that combines elements of multiple types of malware and usually employs multiple attack vectors to increase the severity of damage and the speed of contagion
+
+Recently blended attacks have increased in complexity (Stuxnet).
+They are capable to mutate and adapt to specific situations in a specific environment.
+
+### Examples of weaponized industrial cyber threats
+
+* *Stuxnet:* First, complicated, highly specific
+* *Shamoon:* Destructive, wiped systems clean
+* *Flame:* More complex derivative of Stuxnet, cyberespionage
+
+#### Stuxnet
+
+The book describes it's abilities and goals
+
+##### Lessons learned
+
+![Lessons Learned - Stuxnet](./Images/7 - Stuxnet.png)
+
+* To defend the ICS, we have to adopt a new "Need to know" mentality.
+* If something is not explicitly defined, approved and allowed to execute and/or communicate, it is denied.
+* Such high SW complexity and implementation requires above-average monitoring.
+    * These measures include Layer 7 application session monitoring to discover zero-day threats and to detect covert communications over allowed "overt" channels.
+    * More clearly defined security policies
+    * Network whitelisting to control behaviour in and between zones.
+
+#### SHAMOON/DistTrack
+
+Information gatherer and destructive capabilities.
+Constructed of 3 parts: Dropper, Wiper and Reporter.
+
+
+#### Flame/Flamer/Skywiper
+
+APT targeting middle-eastern countries.
+Consists of modules:
+
+* *Flame:* AutoRun infection routines
+* *Gadget:* Update modules
+* *Weasel:* Disk and file parsing
+* *Telemetry:* handle C2 routines
+* *Suicide:* self-termination
+* *Frog:* steal passwords
+* *Viper:* Capture screenshots
+* *Munch:* capture network traffic
+
+## Attack Trends
+
+Shift from exploiting network layer and protocol layer vulnerabilities to application-specific exploits.
+More recent: Shift from OS exploitation to the almost ubiquitously deployed client-side applications like web browsers, Adobe Acrobat Reader, etc.
+
+Web based applications are also used heavily both for infection and for C2.
+Employees in ICS use these services and they can't be monitored by the company, due to privacy.
+Some companies even allow social media access through corporate firewalls.
+
+### Evolving vulnerabilities: The Adobe exploits
+
+Example of perspective shift, from low-level protocol to high level application.
+
+The exploits use the ability within PDF's to execute code to perform malicious actions.
+
+### Industrial application layer attacks
+
+Adobe reader exploits are highly relevant because many computing products -Including ICS products- distribute manuals and other reference materials using PDF files and preinstall Adobe Reader.
+This application remains unpatched, ergo possible vulnerability exploitation.
+
+*Industrial Applications* are the applications and protocols that communicate to, from, and between supervisory, control, and process system components.
+
+These applications are designed to control, either directly or indirectly, and therefore do not need to be infected with malware.
+They can simply be used with malicious intent. (*Exploitation of functionality*)
+They represent a problem that is not typically addressed through traditional IT security controls.
+
+To mitigate this risk, it is going to be a lot easier and less costly to deploy appropriate security controls versus attempting to retrofit and/or replace the affected ICS equipment.
+
+### Antisocial networks: A new playground for malware
+
+People are subject to social engineering exploitation.
+A attack targeting a specific ICS worker that, when opened, downloads and infects his computer is totally plausible.
+Users at Pharmaceutical and Chemical sectors are highly probable of web-based malware encounters.
+The best way to protect from these attacks is to block social media access within the network.
+
+#### Cannibalistic mutant underground malware
+
+Malware mutation is the ability of malware to auto-update itself. (Stuxnet and it's P2P network is a example of this)
+
+## Dealing with an infection
+
+Upon a infection do not immediately clean the system of infected malware.
+There may be subsequent levels of infection that exist, yet dormant and may be activated as a result.
+
+* The first step should be to logically isolate the infected machine from the network.
+* Consider the safe and reliable operation of the manufacturing process as the primary objective.
+* Always monitor everything
+* Analyze available logs to help identify scope, infected hosts, propagation vectors and so on.
+    * Retrieve legs from systems that have not been compromised, to perform comparative analysis.
+* Sandbox and investigate infected systems.
+* Be careful not to unnecessarily power-down infected hosts, as valuable data might be lost.
+* Clone disk images for off-line analysis.
+* Reverse-engineer detected malware
+* Retain all info, for disclosure to authorities
+
+If you have to reinstall OS, the initial copy should have been generated upon the system's arrival, and stored in a remote (off-site) secure location.
