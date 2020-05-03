@@ -1330,3 +1330,211 @@ There may be subsequent levels of infection that exist, yet dormant and may be a
 * Retain all info, for disclosure to authorities
 
 If you have to reinstall OS, the initial copy should have been generated upon the system's arrival, and stored in a remote (off-site) secure location.
+
+# 8. Risk and Vulnerability Assessment
+
+Highlights of how to implement a risk and vulnerability assessment process specific for industrial systems.
+
+## Cyber security and risk management
+
+### Why risk management is the foundation of cyber security
+
+*functional safety*: a cornerstone in the overall operation of the facility, as well as an important key performance indicator (KPI) used in evaluating a company.
+
+Important to establish an acceptable level of risk tolerance.
+It is possible to manage this unmitigated risk in four ways:
+
+1. Mitigation (You manage)
+    * Continuous process of identification, assessment and response
+    * These risks cover a broad range of threats that include both internal and external sources
+    * Majority of risks come from internal (Not maliciously, but carelessly)
+1. Transferal (Others manage)
+1. Avoidance (No one manages)
+1. Acceptance (Stakeholders manage)
+
+
+### What is risk?
+
+* **Risk:** The potential that a given threat will exploit vulnerabilities of an asset ... And thereby cause harm to the organization
+
+It is important to realize risk management does not end at updating and patching programs to remove identified security flaws.
+It is also possible that one could reduce risk by "containing" an event and limiting the extent if resulting damage. (e.g. Network segmentation and creation of security zones and conduits following a initial breach)
+
+The **Threat event** consists of components that all can significantly impact risk:
+
+* Threat Source or Actor to carry out the event
+    * Human aspect of the attack
+    * Characteristics:
+      * Capability to carry out the attack
+      * Intent to cause harm
+      * Opportunity to initiate the event
+* Threat Vector to initiate the event
+* Threat Target which the event attacks
+
+It is very difficult for an organization to reduce risk focusing on outside sources because much of this is not in their direct control.
+
+The *malicious* insider possesses ample intent to cause harm, but what intent does the "Unintentional" insider possess when performing an accidental action that causes harm to the ICS?
+The Actual intent is very high (in-depth system knowledge, elevated access privileges, direct access to ICS assets, ...) 
+The resulting net risk is very high.
+This is why insiders are high targets, and can be victims of spear-phishing.
+
+Operational security must manage both "virtual" and "physical" risks.
+Consequences resulting from a cyber attack on a ICS are less likely to have a direct impact on the system itself, but rather cause the plant under control to operate improperly which may lead to shutting the plant down.
+
+### Standards and best practices for risk management
+
+Current standards and best practices pertaining to risk management frameworks and assessment techniques
+
+![Risk relationships](./Images/8 - riskRelationships.png)
+
+The basic guidance includes:
+
+* Asset identification
+* Threat identification
+* Vulnerability identification
+* Existing security controls identification
+* Consequence identification
+* Consequence analysis
+* Risk ranking
+* Security control recommendations
+
+## Methodologies for assessing risk within industrial control systems
+
+### Security tests
+
+The objective is to establish a methodology that is based on criteria that help drive consistency from assessment to assessment, and that allows common vulnerabilities that may exist across multiple systems to be uncovered.
+
+Any assessment, audit or test that is conducted therefore only represents a snapshot in time.
+This is the motivation behind a "repetitive" process that is triggered by external events:
+
+* Changes to the system (Component upgrade / system migration)
+* Changes to the landscape (release of new exploit kit)
+* Elapsed periods of time
+
+It is important to look at not only the system-specific details (ICS vendor, network vendor, SW & HW revisions) but also site-specific factors (Geographical location, compliance with corporate polices, procedures, guidelines and standards)
+This will then facilitate the identification of vulnerabilities within the system under consideration.
+
+![Security testing](./Images/8 - securityTesting.png)
+
+Once these vulnerabilities are identified, they will then be ranked in terms of severity and actions will be developed to remediate or mitigate these weaknesses.
+
+The purpose of the security tests is not to exploit the system, but to determine the relative level of security a system possess and identify ways to improve the overall level of security that remains.
+
+### Security audits
+
+Performed to test a particular system against a specific set of polices, procedures, standards or regulations.
+Audits do not typically uncover unexpected vulnerabilities.
+
+### Security Vulnerability Assessments
+
+Provide ICS users and businesses with a well-balanced cost versus value security evaluation mechanism.
+The premise of this type of assessment is to look at the entire solution for the system under consideration. (For each ICS system and subsystem: servers, controllers, field instruments, PLC's, RTU's, ... Also considering User Identification, authentication, authorization)
+
+It is not practical to perform a complete Vulnerability Assessment against 100% of the hosts within a ICS architecture, therefore they tend to focus on critical nodes.
+
+### Establishing a testing and assessment methodology
+
+#### Tailoring a Methodology for industrial networks
+
+The overall focus of a security test targeting an Industrial Network shall evaluate all ICS perimeters.
+The information obtained will be used to evaluate the overall network architecture. (How firewalls have been deployed on the conduits between various zones, communication channels (conduits) between ICS field networks, field controllers, and supervisory equipment)
+It is important to include "social" aspects in the evaluation (How personnel manage the ICS to control the facility, ...)
+The general rule is that pen tests should never be performed on an active, online ICS component, but rather limited to a off-line, la, or development system.
+
+#### Theoretical vs Physical Tests
+
+The risk to operational integrity is too great to allow even the slightest risk that the tests will impact manufacturing operations.
+These situations require a "Theoretical" approach.
+
+#### Online vs Off-line Physical Tests
+
+* *Online:*
+    * Represent a completely functional and operational ICS architecture that includes all the systems, networks, and data integration.
+    * Contain volatile ICS components
+    * Include third-party components
+    * Could be used to test susceptibility of network vulnerabilities to attack
+    * Can test less critical third-party components for vulnerabilities
+* *Off-line:*
+    * Reflect a small subset of the overall architecture, and can omit key components that are a valuable piece of assessment.
+    * Can be performed when Online tests can't, due to criticality
+    * Can include vitalization technologies
+    * Best at testing ICS components and their vulnerabilities
+    * Can be used to test the ability to exploit vulnerabilities
+
+The primary goal of a ICS security test should be to secure the system as best as possible, rather than only securing those vulnerabilities that may be visible to a potential attacker.
+
+The preferred practice of security assessment is to use the white-box approach.
+
+## System Characterization
+
+Once the premise of the security test that will be conducted has been defined as "physical" and "online", the first activity performed is to characterize or identify all physical and logical assets that comprise the system under evaluation.
+
+System characterization and asset identification is best performed using a zone concept.
+Once this trusted boundary is established, it is important to delineate all of the external entry points that require penetration of the perimeter.
+
+
+![Trust boundary and entry points](./Images/8 - TrustBoundaryAndEntryPoints.png)
+
+![Identifying entry points](./Images/8 - IdentifyingEntryPoints.png)
+
+![Identifying Logical Assets](./Images/8 - IdentifyingLogicalAssets.png)
+
+![Identifying Logical Assets](./Images/8 - IdentifyingLogicalAssets2.png)
+
+### Data collection
+
+Documentation is validated and the system assets are characterized or identified via a variety of data collection methods.
+
+There are scanners that can assist in identifying devices, but they can alter the network and cause catastrophic effects on some ICS components. (Use active scanners only off-line) 
+
+### Scanning Industrial Networks
+
+#### Device Scanners
+
+* *nmap:*
+    * One of the most popular device scanners
+    * Capabilities: Host discovery, host service detection, OS detection, evasion and spoofing capabilities, and capability to execute custom scripts.
+* *ping:*
+    * Uses ICMP (Internet Control Message Protocol) but now unreliable because many hosts block requests.
+* *arping / arp-scan:*
+    * Identify hosts within a network, even across security perimeters protected by firewalls
+* *netstat:*
+    * Ability to display a number of host-based network features (active, listening network connections, application and associated service/port mapping and routing tables)
+    * Friendly and passive tool
+
+#### Vulnerability Scanners
+
+Examples: OpenVAS, Nessus, Guard, Nexpose, Core Impact, SAINT scanner)
+Compare target with known vulnerability databases.
+
+#### Traffic Scanners
+
+Collect network packets and provide them for subsequent analysis that may include host identification, data flows, and firewall rule set creation.
+
+* *Wireshark:*
+    * analysis of network traffic in the form of pcap files.
+    * Uses protocol dissectors so that protocols used in the various Operating System Interconnection (OSI) layers can be dissected and presented before passing them to the next layer. (GUI visualization)
+    * Has the ability to Dissect a wide range of Industrial Protocols
+
+#### Live Host Identification
+
+##### Quiet / Friendly scanning techniques
+
+* `arping -i eth0 -c 1 192.168.1.1` (Send a single ARP request to one target via a specific network interface)
+* `sudo arp-scan -I enp0s20u2u1 -v -l` (Network-wide scan with interface (-I) and verbose)
+* `tcpdump –n –i eth0 –w out.pcap dst 192.168.1.1 or src 192.168.1.1` (Initiate a packet capture that does not resolve address to hostname (-n) using a specific network interface)
+
+##### Potentially noisy / dangerous Scanning Techniques
+
+* `nmap -sn 192.168.0.1/24` (Perform a ping sweep on a single subnet)
+* `hping3 -S -p 502 192.168.0.1` (Sends a single packet that only contains the TCP header flag SYN set (-S) to a single target (192.168.1.1) using the port for Modbus/TCP (-p 502)
+
+##### Port Mirroring and Span Ports
+
+Most networks today are built using switches that provide a single collision domain  between the host and the switch that it is connected. The switch is then responsible for maintaining a local hardware address (MAC) table and forwarding traffic as needed to the access ports that contain the desired MAC destination address.
+This means that the only types of traffic that can be monitored from a computer’s network interface is the traffic specifically destined for the computer and local network broadcast and multicast traffic.
+
+**Always remember than any tool used in an online ICS environment should be thoroughly tested for 
+potential impact prior to use in a production environment. The procedures for any online test should 
+also include an action plan that should address the steps to be taken in the event of an unexpected 
+consequence occurring during the test.**
