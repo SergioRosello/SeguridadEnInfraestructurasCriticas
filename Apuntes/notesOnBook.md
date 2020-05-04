@@ -1538,3 +1538,183 @@ This means that the only types of traffic that can be monitored from a computer�
 potential impact prior to use in a production environment. The procedures for any online test should 
 also include an action plan that should address the steps to be taken in the event of an unexpected 
 consequence occurring during the test.**
+
+##### Command Line Tools
+
+Tools installed on most system in ICS.
+Some don't inject traffic into the network.
+
+* `ipconfig` Windows command-line tool that displays current network configuration values, but can also be used to refresh DHCP and DNS settings.
+* `netstat` determine what applications are running on a computer and how they map to ports ans service names. (Use `tasklist` to transform service PID to process name)
+* `wmic` set of system management features
+
+##### Hardware and Software inventory
+
+The development of these inventories may be one of the most valuable deliverables from a physical security test.
+The steps are as follows:
+
+1. `arp-scan` to identify all network-connected hosts. Must be run on all layer 3 broadcast domain or subnet. (Passive mode: Wireshark tcpdump)
+1. Confirm identified hosts are authorized for Industrial Network and update system architecture drawing
+1. Collect host platform information for each network-connected device
+    * Include base HW, OS information, network configuration details, BIOS revision, firmware details)
+    * Can be obtained with `systeminfo` command
+1. Collect application information for each network-connected device
+    * Include application vendor, name, revision, installed patches
+    * `wmic` command with the `product get` option
+1. Consolidate information into spreadsheet or portable database
+
+##### Data flow analysis
+
+Sometimes asset owners or ICS vendors don't completely understand underlying communications between hosts that comprise the ICS. 
+It is very important, as the ICS transitions from previous flat architecture, to that of segmented into various security zones, that communication channels that exist between security are well documented.
+
+Steps required to create a data flow diagram:
+
+1. Collect a snapshot of the network traffic for the system operating under normal conditions
+    * `tcpdump`
+    * If multiple dump files are required, merge them with `mergecap`
+1. Open Wireshark and use the feature *Statistics* using *conversations*. The output reflects host-to-host sessions that where active during the network capture
+    * The TCP tab shows the TCP ports used during the session
+    * The UDP tab shows the UDP ports used during the session
+
+![Wireshark analysis](./Images/8 - Wireshark.png)
+
+## Threat Identification
+
+Most difficult phase of the process.
+It is commonly omitted.
+It can be very difficult to describe all aspects of the unmitigated risk that is present for a particular industrial environment.
+Physical and logical assets must now be mapped to specific threats that can later be assessed as to weather appropriate controls are in place to secure theses assets from the identified threats.
+
+Threat mapping can be performed in:
+
+* organization by physical asset
+* threat source (outsider, insider)
+* intent (intentional, unintentional)
+
+### Threat actors/sources
+
+Most important to realise that internal unintentional mistakes can occur, and are more probable than external intentional threat.
+This is the reason why objective risk process is necessary.
+
+![Common threat actors/sources](./Images/8 - CommonThreatActors.png)
+
+Begin the threat identification activities by focusing on 4 different threat sources:
+
+* Intentional Outsider (malicious)
+* Unintentional Outsider (accidental)
+* Intentional Insider (malicious)
+* Unintentional Insider (accidental)
+
+### Threat vectors
+
+Identifies the method by which the threat source will impact the target. 
+This directly corresponds to the Entry Points in the context of the methodology established in this section.
+
+![Common Threat Vectors](./Images/8 - CommonThreatVectors.png)
+
+### Threat Events
+
+Represents the details of the attack that would be carried out by a particular Threat Source
+When the source is an adversarial one, the Threat Event is typically described in terms of the tactics, techniques, and procedures (TTP) used in the attack.
+
+![Common Threat Events](./Images/8 - CommonThreatEvents.png)
+
+![Common Threat Events](./Images/8 - CommonThreatEvents2.png)
+
+### Identification of threats during security assessments
+
+When a threat is discovered during the Security Assessment, add it to a spreadsheet for tracking and measuring risk.
+
+Threats could reveal any of the following:
+
+* Infected media discovered from anti-virus logs
+* Infected desktop or laptop workstations discovered from Windows Event logs
+* Corrupted static data discovered from local disk evaluation
+* Data copied to untrusted location discovered from network resource usage
+* Accounts not deactivated discovered from local/domain account review
+* Stolen credentials discovered when used to access unauthorized hosts
+* Overload communications network discovered when reviewing network statistics
+
+## Vulnerability Identification
+
+This activity will combine automated tools, such as vulnerability scanning applications, with manual analysis of data collected throughout the exercise.
+Vulnerabilities may exist in the form of miss configured settings, improper authentication, not only software bugs.
+The idea behind such a thorough process is to attempt to review and discover many of the more common ICS vulnerabilities 
+
+![ICS Common Vulnerabilities](./Images/8 - CommonVulnerabilities.png)
+
+### Vulnerability Scanning
+
+Process of methodically reviewing the configuration of a set of hosts by attempting to discover previously identified vulnerabilities that may be present.
+
+Example manual vulnerability scanning:
+
+1. The `wmic` command is used with the product get option to list all of the installed applications running on a Windows 2003 Server host.
+2. The SCADA application software is shown as “IGSS32 9.0” with the vendor name “7-Technologies” and a version of 9.0.0.0.
+3. Using OSVDB, “igss” is entered in the Quick Search field and several results are returned. Selecting the most recent item, a link is provided to an advisory published by ICS-CERT that confirms that the installed version of software has a published vulnerability.
+4. The advisory contains information on how to download and install a software patch from the software provided.
+
+If automating the process, you must be able to assess the application that is going to be installed in the system (Check for virus, bugs)
+
+Important to perform automated white-box scans, which are easier on the network and provide a perspective hackers wont be able to access (White-box vulnerability scan)
+Normally the Vulnerabilities found during a White-box scan far exceed the vulnerabilities found during a black-box scan
+
+### Configuration auditing
+
+The absence of software vulnerabilities does not mean that the software has actually been installed, configured, and even hardened in a manner that helps to reduce the possibility of a breach.
+
+* *Compliance auditing*
+    * compares the current configuration of a host against a set of acceptable settings.
+    * Some companies that provide configuration benchmarks include: NIST, Center for Internet Security, NSA, Tenable Network Security.
+    * The Nessus vulnerability scanner provides the ability to import predesigned or customized files that can be applied against target systems.
+
+###  Vulnerability prioritization
+
+Not all vulnerabilities that are discovered during a security test are necessarily exploitable.
+What proves more effective is an objective method of rating the severity of vulnerabilities as they are discovered within a particular architecture.
+A vulnerability that exists in a Internet-facing corporate web server does not represent the same amount of risk as the vulnerability existing on a web server on a protected security zone that is nester deep within the organization.
+
+#### Common vulnerability scoring system
+
+Free, open, globally accepted industry standard that is used for determining the severity of system vulnerabilities.
+Each vulnerability is provided with one to 3 different metrics that produce a score on the scale 0 - 10 that reflect the severity of the vulnerability applied in different situations.
+Each score consists of a "vector" that represents the value used for each component in calculating the total number.
+
+## Risk Classification and ranking
+
+Provides a means of evaluating the threats and vulnerabilities identified so far, and creating an objective method to compare these against one another.
+
+### Consequences and impact
+
+The last piece of information needed is a determination of the consequences or impact to operations that would occur should the cyber event occur.
+Some examples of the consequences that could occur should any ICS component fail to perform the intended function.
+
+![Common ICS Consequences](./Images/8 - CommonConsequences.png)
+
+### How to estimate consequences and likelihood
+
+The DREAD model provides an indirect means of calculating consequences and likelihood by looking at these factors in a different way.
+
+![Dread model](./Images/8 - DreadModel.png)
+
+Pairing this model with The Six Sigma Quality Function Deployment (QFD) transforms the qualitative parameters (High, Medium, Low) into quantitative values that can be analyzed statistically.
+
+### Risk Ranking
+
+The application of QFD to the DREAD model will allow the data to be consolidated and used alongside the asset, threat, and vulnerability data.
+
+![Risk and Vulnerability assessment Worksheet](./Images/8 - RiskAndVulnAssessmentWorksheet.png)
+
+In the previous image, 10 = high, 5 = medium and 1 = low.
+
+## Risk Reduction and Mitigation
+
+The process has yielded a prioritized list of items in terms of net “unmitigated” risk to the ICS and the plant under its control. 
+Some risks may have been mitigated to an acceptable level following the security and vulnerability assessment. 
+The final activity for those remaining risk items is to apply a range of cyber security controls or countermeasures to the assets within the ICS in order to reduce or mitigate these risks.
+
+![Security Life cycle model](./Images/8 - SecurityLifecycle.png)
+
+Security should be considered as a long-term “strategic” investment rather than a short-term or one-time “tactical” expense.
+The operational security used to protect these same facilities is treated in a similar manner and should receive continuous attention (and budget) like other operational expenses (maintenance, improvements, training, etc.).
