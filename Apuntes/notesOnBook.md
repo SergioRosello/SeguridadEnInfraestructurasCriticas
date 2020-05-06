@@ -1718,3 +1718,185 @@ The final activity for those remaining risk items is to apply a range of cyber s
 
 Security should be considered as a long-term “strategic” investment rather than a short-term or one-time “tactical” expense.
 The operational security used to protect these same facilities is treated in a similar manner and should receive continuous attention (and budget) like other operational expenses (maintenance, improvements, training, etc.).
+
+# 9. Establishing Zones and Conduits
+
+By isolating assets into groups, and controlling all communications flow within and between groups, the attack surface of any given group is greatly minimized.
+
+Security zones can be defined from either a "physical" or "logical" perspective.
+
+* *Physical*: Defined based on the grouping of assets based on their physical location.
+* *Logical*: Assets are grouped based on a particular functionality or characteristic.
+
+Security Conduits are actually a special type of zone that groups “communications” into a logical arrangement of information flows within and between various zones
+Conduits can also be arranged according to physical (network cabling) and/or logical (communication channels) constraints.
+When properly implemented, zones and conduits limit digital communications in such a way that each zone will be inherently more secure.
+By it's nature, supports other well known security protocols such as the Principle of least privilege and the Principle of least route (Network node is only given the necessary connectivity to perform its function).
+
+As zones and conduits become more granular, there will be a corresponding improvement in security (Figure 9.1). It is therefore important to carefully identify zones in the early stages of the cyber security lifecycle.
+
+![Security zones defined by integration levels](./Images/9 - SecurityZonesByIntegrationLevels.png)
+
+Once defined, zones and conduits will help to pinpoint areas where network and host security and access controls may be required.
+This is because, by limiting communications to defined conduits, each conduit represents a potential network attack vector.
+If implemented poorly, zones and conduits will result in a well-organized architecture; if implemented properly, they will result in a highly secure architecture.
+
+Network security controls (Firewalls, IDS, IPS, ACLs) will be highly effective when implemented against a highly effective when implemented against a well-organised architecture with clear policies that are defined around zones and conduits.
+Consider a grouping of assets that cannot be protected individually with anti-malware defenses like anti-virus and application whitelisting.
+These assets can be logically grouped into a zone, and the anti-malware defenses are implemented on the conduit(s) into this zone.
+This is one effective way asset owners are able to continue operation of legacy and even unsupported systems (e.g. Windows XP) through the creation of zones of related assets, and then applying strong security controls on the conduits entering these zones.
+
+## Security Zones and Conduits Explained
+
+A good analogy to security zones is to consider how many industrial facilities maintain separation of basic control and safety-related assets.
+This separation occurs, not just because of existing laws and regulations, but because of the underlying layers of protection that each of these systems provides, and how the relative protection of each system is unique.  
+
+Assets at a particular site are grouped based on their relative security requirements or “security level.”
+These zones are then created as either “external” ones, or when multiple layers of protection are required, they can be “nested” inside one another.
+This allows security controls to be deployed to zones (and the assets they contain) based on the unique security requirements of each.
+
+## Identifying and Classifying Security Zones and Conduits
+
+One of the greatest challenges in establishing proper security zones and conduits is the creation of a set of base requirements or “goals” that are used to determine if a particular asset should be placed in a given zone.
+
+## Recommended Security Zone Separation
+
+When defining highly granular zones, it should be assumed that there will be an overlap that prevents adequate zone and conduit enforcement (A zone created by physical control subsystems is likely to overlap with zones defined logically by specific protocols)
+
+When assessing the network and identifying potential zones, include all assets (physical devices), systems (logical devices like software and applications), users, protocols, and other items.
+Attempt to separate two items, such as a protocol from an asset.
+If the two can be separated without impacting either item’s primary function, they belong to two functional groups, and are therefore excellent candidates for their own zones.
+(For example, if some SCADA systems use the DNP3 protocol, create a list of all devices currently communicating over DNP3.
+Assess each to see if DNP3 is necessary to its function or not (it may support multiple protocols, and may be actively using a different protocol to perform its functions).
+If not, remove it from the functional group, and if possible disable the unused protocol on the SCADA server as well.
+The result will be a list of all assets legitimately using that protocol.
+
+Similarly, consider which assets are connected to each other on the network, both physically and logically.
+Each represents a functional group based on network connectivity and data flow.
+Again, assess each item in question individually, and if it does not need to belong, remove it from the group.
+A functional group can be based on almost anything. (Safety, Basic Process Control, Supervisory Controls, Peer-to-Peer Control Processes, Control Data Storage, Trading Communications, Remote Access, ability to patch, redundancy, malware protection, and authentication capability)
+
+### Network Connectivity
+
+Networks should be considered both physically (what devices are connected to other devices via network cables or wireless connections) and logically (what devices share the same Routable network space, subnet or access control list).
+
+* Physical networks, are easy to determine using a network map.
+* Logical network boundaries are defined by the use of devices operating on OSI Layer 3 (Routers, advanced switches, firewalls) to separate a physical network into multiple address spaces.
+These devices provide a logical demarcation between each network.
+This forces all communications from one logical network to another to go through the Layer 3 device, where ACLs, rule sets, and other protective measures can be implemented.
+
+### Control Loops
+
+A control group consists on the devices responsible for a particular automated process.
+In most cases, a control group will consists on a sensor, a controller, and an actuator.
+
+Building a functional group based on a control loop is a very precise example.
+
+![Zones defined by process](./Images/9 - zonesDefinedByProcess.png)
+
+### Supervisory Controls
+
+Each control loop is also connected to some sort of supervisory control —typically a communications server and one or more workstations— that are responsible for the configuration (engineering workstation EWS), and monitoring and management (operator workstation HMI) of the automated process.
+Because the HMI is responsible for the PLC, these two devices belong to a common functional group.
+However, because the HMI is not directly responsible for those IEDs connected to the PLC, the IEDs and PLC are not necessarily in a common functional group as the HMI (they belong to a common functional group based on some other common criteria, such as protocol use).
+ All PLCs controlled by the HMI are included, as are any “master” HMI, communication servers, or control management systems that might have responsibility or control over the initial HMI
+
+ ![Example of supervisory zone](./Images/9 - supervisoryZone.png)
+
+### Plant level control process
+A Master Controller, Master Terminal Unit (MTU), or SCADA Server may be used to manage multiple HMIs, each responsible for a specific part of a larger control process.
+This same master device now represents the root of yet another functional group—this time containing all relevant HMIs.
+
+![Example of plant level zones](./Images/9 - plantLevelZones.png)
+
+#### Control Data Storage
+
+Many industrial automation and control system devices generate data, reflecting current operational modes, status of the process, alarms, and other vital manufacturing information.
+The data historian system may collect data from throughout the control system network, supervisory network, and in some cases, the business network.
+
+![Zone containing devices feeding into a data historian](./Images/9 - zoneHistorian.png)
+
+#### Trading communications
+
+The need to communicate between control centers (e.g. electric transmission and pipeline sectors) is sufficient to justify a protocol such as the ICCP (Inter-Control Center Communication Protocol)
+In this functional group, the remote client devices are all explicitly defined.
+These remote clients should be included within the functional group, as they have a direct relationship to any local ICCP servers that may be in use.
+Because ICCP connections are typically used for trading, access to operational information is necessary.
+This could be a manual or automated informative process, which most likely involves the historized data stores of the Data Historian.
+Making the Data Historian part of the "Trading Communications" zone.
+
+#### Remote Access
+
+In the context of security zones and conduits, it is important to understand that “remote access” refers to any communication through conduits to “external” zones.
+
+When looking at the problem from a zone-and-conduit perspective, they are similar in terms of two “trusted” zones connected via what may be a “trusted” or “untrusted” conduit.
+
+Remote access to control system devices should be controlled via specialized VPN's or Remote Access Servers (RAS) and should only allow explicitly-defined, point-to-point connections from known entities, over secure and encrypted channels.
+
+![Remote access zones](./Images/9 - remoteAccessZone.png)
+
+#### Users and Roles
+
+It is important to limit users, their devices and their roles.
+This is accomplished with a IAM.
+The most well-known example of an IAM is Microsoft's Active Directory. 
+Below is a functional group containing a user and those services that the user is allowed to interface.
+
+![Zone based on a user](./Images/9 - UserIAM.png)
+
+The result of mapping roles and responsibilities to a user is the monitoring of that user's access and determining when this is unauthorised.
+Role-Based Access Control (RBAC) provides a mechanism to configure specific access privileges to specific roles, and then assign individual users to these roles.
+Typically the responsibilities associated with a given role do not change over time; however, the roles assigned to a particular user can change.
+By placing a user in a functional group with only those devices he or she should be using, unauthorised activity could be prevented.
+Although zones are defined, they still need to be properly implemented and secured.
+
+#### Protocols
+
+The protocols that a device uses in industrial networks can be explicitly defined in order to create functional groups based on protocols.
+Only devices that are known to use DNP3, for example, should ever use DNP3, and if any other device uses DNP3, it is a notable exception that should be detected quickly and prevented outright if possible.
+
+![Zones based on protocol use](./Images/9 - zonesOnProtocols.png)
+
+#### Criticality
+
+Zone-based security is about isolating common influencing factors into functional groups so that they can be kept separate and secure from other non-influencing factors
+Critical assets are extrapolated to the critical function group(s) to which they belong, which may or may not contain other critical and/or noncritical assets.
+A good rule of thumb is that any zone that contains a critical asset is a critical zone.
+If non-critical assets are also present in the zone, they must either rise to meet the minimum security requirements of the critical zone, or be moved into a separate zone.
+
+Functionally defined zones should be assessed within the context of their criticality, and vice-versa.
+A good way to proceed would be to assert the protection between critical and noncritical zones, and then additional protection between systems within each zone.
+
+Granular zoning provides the following benefits:
+
+* It will help to minimize the scope of an incident, should one occur, by further separating systems according to the Principle of Least Route. If an asset is compromised, it will only be able to impact a limited number of systems as the ability to communicate to other zones via defined conduits is restricted.
+* It will help to secure critical devices from the insider threat, such as a disgruntled employee who already has legitimate physical and logical access to the parent zone since only limited communication channels are permitted between zones.
+* It will help to prevent lateral attacks from one critical system to the next—if all critical systems are grouped together solely because they are all “critical,” a successful breach of one critical system puts the entire critical infrastructure at risk.
+
+## Establishing Security Zones and Conduits
+
+Conduits are essentially a type of zone that only contains communication mechanisms as its assets
+
+In terms of conduits, these assets are communication assets, such as active and pas- sive network infrastructure (cables, switches, routers, firewalls, etc.) as well as the communication channels that are transmitted over these cables (industrial protocols, remote procedure calls, file sharing, etc.).
+
+Zones are assigned a relative security level that is used to create the foundation for the security requirements and associated characteristics that will be applied to all assets contained within the zone.
+These characteristics include:
+
+* Security policies
+* Asset inventory
+* Access requirements and controls
+* Threats and vulnerabilities
+* Consequences in the event of a breach or failure
+* Technologies authorized and not authorized
+* Change management process
+* Connected zones (conduits only).
+
+As each of the characteristics of a zone are defined, the allocation of assets within the zone become obvious, including the possible creation of nested subzones for particular assets that may be align with other assets within the particular zone.
+The assets now contained within a zone are then evaluated for threats and vulnerabilities in order to determine the resulting risk to the zone should these assets cease to perform their intended function.
+
+In most industrial architectures, the physical network is the conduit.
+It is also important to evaluate the vulnerabilities that may exist within the active network infrastructure, including switches, routers, and firewalls since the loss of any of these components can introduce significant risk to not only the network (conduit), but all zones connected via this conduit.
+One of the leading root causes of compromises to secure industrial networks is from misconfiguration of appliances placed on conduits that connect less-trusted “external” zones to more-trusted “internal” zones.
+These configuration errors commonly result from attempting to configure the communication access control without sufficient documentation of the content of each of the desired communication channels crossing the conduit.
+
+![Overlapping Zones based on different criteria](./Images/9 - overlappingZones.png)
