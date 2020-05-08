@@ -1900,3 +1900,7 @@ One of the leading root causes of compromises to secure industrial networks is f
 These configuration errors commonly result from attempting to configure the communication access control without sufficient documentation of the content of each of the desired communication channels crossing the conduit.
 
 ![Overlapping Zones based on different criteria](./Images/9 - overlappingZones.png)
+
+# 10. Implementing Security and Access Controls
+
+
