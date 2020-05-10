@@ -2,24 +2,12 @@
 
 ## Sergio Roselló Morell
 
-En no más de 4 páginas y utilizando la infraestructura de red de la figura adjunta: 
-
-1. Determinar  qué  zonas  y  conduits  habría  que  definir  desde el  punto  de  vista  de  la seguridad 
-1. Discutir cuáles serían los riesgos de seguridad más importantes asociados, bastaría con citar (y argumentar) los tres principales 
-1. Explicar  qué  medidas  de  seguridad  serían  las  más  importantes  y  urgentes  a implementar y por qué 
-1. Hacer un “mini plan” de puesta en marcha de la política de seguridad asociada a todo lo anterior 
-
-![Figura adjunta](./29-04-20.png)
-
 ## 1. Zonas y Conduits a definir desde el punto de vista de la seguridad
-
-Existen una serie de mejores practicas para las infraestructuras criticas.
-Dependiendo de la seguridad y criticidad de los elementos en uso, se deben establecer unas zonas u otras.
 
 La regla general para mantener una buena seguridad, es separar el ICS en al menos tantos niveles como indique la pirámide ISA-95.
 En nuestro caso, tenemos elementos del nivel 0, nivel 1 (PLC, IED), nivel 2 (HMI), nivel 3 (historians) y nivel 4 (red corporativa).
 Por lo tanto, como mínimo, tenemos que dividir nuestra red en 4 niveles.
-Cuanto mas granular y subdividida sea nuestra red, mas segura sera, si tenemos un buen control de trafico en los conduits.
+Cuanto mas granular y subdividida sea nuestra red, mas segura sera.
 
 ### Las zonas físicas:
 
@@ -44,7 +32,7 @@ En la zona de control: (Azul)
 
 En la DMZ intermedia (verde)
 
-* **ID:13.0..n** Cada una de las empresas vinculadas, el servidor de comunicaciones de las empresas vinculadas y el servidor de autenticación y el servidor web (De donde obtendrán los datos del proceso o de sus dispositivos (Obtenido del DB/Historiador))
+* **ID:13.0..n** Cada una de las empresas vinculadas, el servidor de comunicaciones de las empresas vinculadas y el servidor de autenticación y el servidor web (De donde obtendrán los datos del proceso o de sus dispositivos (Obtenido del DA/Historiador))
 
 En la zona corporativa (Amarillo)
 
@@ -56,7 +44,7 @@ En la zona corporativa (Amarillo)
 
 Entre zonas
 
-* **ID:19** Zona corporativa (Amarillo) con servidor de autenticación (Verde), con "Engineering workstation (Azul)
+* **ID:19** Zona corporativa (Amarillo) con servidor de autenticación (Verde), con "Engibe erina forestación (Azul)
 
 ## Conduits
 
@@ -88,14 +76,14 @@ Por ejemplo, al HMI.
 Pongamos que este dispositivo usa el protocolo HTTP para comunicarse.
 Este dispositivo tiene ahora la capacidad de enviar  al servidor C2 contraseñas capturadas en la zona de control desde un dispositivo en la DMZ con acceso a Internet, porque el Firewall acepta trafico HTTPS de este dispositivo.
 
-### 2. Si el trafico llega a la zona de control, puede acceder sin filtro a dispositivos críticos.
+### 2. Si el malware llega a la zona de control, puede acceder sin filtro a dispositivos críticos.
 
-Si un actor malicioso consigue acceder a la red de control, nada le impide acceder a los dispositivos críticos
+Si un actor malicioso consigue acceder a la red de control, nada le impide acceder o manipular a los dispositivos críticos.
 
 ### 3. Los negocios asociados se conectan al mismo Firewall que nosotros
 
 Esto quiere decir que el sistema, aunque se puede configurar para que se tengan en cuenta distintas reglas para las empresas externas que para nosotros, es mas complejo de administrar.
-Ademas, si llega trafico malicioso desde las empresas asociadas (Cuya seguridad no podemos administrar) puede llegar a infectar nuestro Firewall y esto seria critico para nuestra empresa, dada la arquitectura presente.
+Ademas, si llega trafico malicioso desde las empresas asociadas (Cuya seguridad no podemos administrar) puede llegar a infectar nuestro Firewall y esto seria critico para nuestra empresa, porque es un punto critico en nuestra arquitectura.
 
 ## 3. Medidas de seguridad a implementar
 
@@ -117,7 +105,7 @@ El segundo firewall previene que trafico malicioso desde los servidores de las D
 
 Otra de las posibles soluciones es no permitir que el mismo protocolo sea la entrada de una zona y salida de otra.
 Por ejemplo: Si sale HTTP de la zona de control, no dejar que entre HTTP en la zona corporativa.
-De esta forma, el virus, deberá usar dos exploits en dos protocolos distintos para pasar de la zona de control a la zona corporativa o viceversa.
+De esta forma, el malware deberá usar dos exploits en dos protocolos distintos para pasar de la zona de control a la zona corporativa o viceversa.
 
 Esta vez, pensando en el segundo riesgo de seguridad, veo que no hay mas que firewall controlando el acceso de trafico desde las zonas externas a la capa de control a los dispositivos críticos, como Controladores, RTU's, PLC's o IED's.
 Esto es critico, porque quiere decir que todos los dispositivos críticos están al alcance de un actor malicioso que consiga entrar a la zona critica.
@@ -127,8 +115,7 @@ La política de seguridad, como he redactado previamente, debe seguir el princip
 Esto quiere decir que se tienen que bloquear los protocolos y paquetes en los protocolos que no se vayan a usar por cada dispositivo.
 En este momento, viene bien un inventario con los requisitos de cada dispositivo y las opciones que van a emplear.
 
-Para solucionar el problema anotado en el tercer punto del apartado anterior, veo que es necesario que las empresas asociadas se conecten a un Firewall dedicado para ellas, de esta forma, si consiguen infectar el firewall, no vulneran el punto mas critico de la red interna entera.
-
+Para solucionar el problema anotado en el tercer punto del apartado anterior, veo que es necesario que el trafico de las empresas asociadas pase por un Firewall dedicado para ellas, de esta forma, si consiguen infectar el firewall, no vulneran el punto mas critico de la red interna entera.
 Ademas, extendiendo lo mencionado previamente, si el Firewall principal falla, no hay ninguna medida de control. 
 La red entera quedaría desmontada y el área corporativa no podría seguir los procesos del área de control.
 Para mitigar esto, es necesario que se establezca un segundo Firewall de recuperación.
@@ -154,13 +141,15 @@ Incluyendo los dispositivos de las empresas asociadas, ya que están situados de
 
 Mitigar los riesgos mas probables de causar un incidente, no los mas interesantes, ni sencillos.
 
-### 4. Determinar la probabilidad de que ocurra una vulnerabilidad
+### 4. Clasificación de riesgos y ranking
 
 Contrastar las vulnerabilidades existentes, con la frecuencia con la que se dan.
-Otra forma de pensar en ello es 
 
-### 5. Determinar el impacto de dichas vulnerabilidades
-### 6. Determinar el riesgo de dichas vulnerabilidades
-### 7. Alternativas/formas de mitigar o controlar dichas vulnerabilidades
-### 8. Redactar informe de los hallazgos
+Una vez tenemos los riesgos y vulnerabilidades, debemos estimar las consecuencias de los mismos.
+Una de las formas de hacer esto es con el modelo DREAD y el QFD (Quality Function Deployment).
 
+Nos ayudan a pasar los valores cualitativos obtenidos hasta ahora, a valores cuantitativos.
+Con estos datos, si que podemos mantener un histórico de los riesgos.
+
+Por ultimo, es muy importante que el análisis de seguridad se haga de una forma recurrente.
+Las ventajas se expanden desde mantener el inventario de dispositivos al día, hasta estar al día de nuevos cambios medioambientales, y que a consecuencia de ello, cambien nuestros riesgos.
