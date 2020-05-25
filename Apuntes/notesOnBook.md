@@ -1903,4 +1903,200 @@ These configuration errors commonly result from attempting to configure the comm
 
 # 10. Implementing Security and Access Controls
 
+The process of securing zones can be summarized as follows:
 
+1. Map the logical container of the zone against the network architecture, so there are minimal network paths of communication channels onto and out of each zone. (Creating a zone perimeter and from this entry/exit points are identified.
+1. Make necessary changes to the network so the network architecture aligns with the defined zones. (If two zones coexist within a flat network, segment the network in order to separate the zones)
+1. Document zone for purposes of policy development and enforcement.
+1. Document the zone for purposes of security device configuration and monitoring.
+1. Document the zone for the purposes of changed management.
+
+Each zone has to be as isolated as possible.
+Communication can be secured using a perimeter security device, such as a next-generation firewall.
+If intra-zone communication is necessary, the use of VPN or other encrypted network access control to enforce a point-to-point route between one split zone is allowed.
+
+## Network Segmentation
+
+In accordance with the principle of least route: a device that does not physically belong to a zone should not be allowed to directly connect to that zone or to any device within that zone.
+
+Effective method for zone separation:
+* Identify and document all networks into and out of each zone
+* For each conduit:
+    * Start at layer 1 and work up to layer 7.
+    * For each layer, assess if network segmentation at that layer is feasible for that conduit.
+    * For more critical conduits, aim for greater segmentation
+    * For each desired layer of segmentation, implement appropriate network security and access controls to enforce that segmentation.
+    * Provide sufficient reporting capabilities, in case of a breach.
+
+### Zone and security policy development
+
+With defined zones and conduits, the organization is armed with the information to satisfy several compliance requirements.
+Documenting all zones within a context of the organization's security policy provides many benefits, by clearly identifying what systems may be accessed by other systems and how.
+
+### Using zones within security device configurations
+
+For each zone, the following list should be maintained at a minimum:
+
+* Devices belonging to the zone, by IP address and preferably by MAC address as well.
+* Software inventory for devices contained within the zone
+* Users with authority over the zone, by user name or other identifier, such as Active Directory Organization Unit or Group.
+* Protocols, Ports, and Services in use within the zone.
+* Specifically forbidden technologies
+
+If additional metrics are identifiable, additional lists should be created. 
+Depending on the number of zones that have been defined, this may require several lists.
+Five (device, users, applications, ports/services, technologies) for every established zone.
+
+## Implementing network security controls
+
+To effectively secure inbound and outbound traffic, two things must occur:
+
+1. All inbound and outbound traffic must be forced through one or more known network connections that are monitored and controlled.
+1. One or more security devices must be placed in-line at each of these connections (this could be a security capability built into network communication switches and routers).
+
+For each zone, appropriate security devices should be selected and implemented using the recommendations below:
+
+### Selecting network security devices
+
+At a minimum, use a firewall.
+Additional security can be used depending on need (IDS, IPS, Unified Threat Management (UTM) devices, Network Whitelisting Devices, Application monitors, and Industrial Protocol Filters.
+
+It is recommended to use both Firewalls (Shallow Packet Inspection) and IDS (Deep Packet Inspection).
+
+IDS is preferred over IPS in ISA model levels 1-3 because it can generate false positives, which might be blocked and cause the network to malfunction.
+In ISA levels 3-4 IPS (Communications between industrial and business zones) can be used.
+
+The data diode is a way of enabling hardware-level one-way communication. 
+Making it impossible to transmit data from the opposite direction.
+
+### Implementing network security devices
+
+Greatly simplified process if previous analysis tasks have been completed.
+
+#### Firewall configuration guidelines
+
+#### Intrusion Detection ans Prevention configuration guidelines
+
+The main difference between IDS and IPS are the extent of the rules to enforce once a packet has been identified.
+IDS can alert, whereas IPS can kill the communication or enforce certain rules
+
+#### Recommended IDS/IPS rules
+
+1. Prevent and undefined traffic from crossing zone boundaries
+1. Prevent and defined traffic containing malware or exploitation code from crossing zone boundaries
+1. Detect and log a suspicious and abnormal activity within a zone
+1. Log normal activity within a zone
+1. Log all traffic originating from the remote access clients.
+
+#### Anomaly-Based Intrusion Detection
+
+Uses statistical models to detect anomalies.
+It does not require any specifically defined signature to detect a threat.
+This allows them to detect 0-day attacks.
+
+#### Protocol anomaly detection
+
+Only verifies protocol-level anomalies.
+Malformed messages, sequencing errors and others.
+Very powerful against 0-day exploits.
+
+#### Application and Protocol Monitoring in Industrial Networks
+
+![Industrial Security Devices](./Images/10 - ISD01.png)
+
+![Industrial Security Devices](./Images/10 - ISD02.png)
+
+#### Data diodes and unidirectional gateways
+
+Prevent return communications at the physical layer typically over a single fiber-optic communication.
+
+## Implementing Host Security and Access Control
+
+Zones consist of specific devices and applications, and conduits consist of a variety of network communication channels between those devices and applications.
+This means that all zones will contain at least one device with a network interface, and therefore it is important to secure the device.
+
+This section includes: Access control (Authentication), Host-based network security (FW, IDS), Anti-malware systems (AV, AWL)
+
+### Selecting host cyber security systems
+
+All host access controls and host network security solutions should be implemented on all network devices.
+The problem is that not all of them are capable of running security software and in some cases, may introduce lag.
+
+#### Host firewall
+
+Just like a network firewall.
+Acts as a initial filter between the host and any attached networks.
+
+#### Host IDS
+
+Work like network ICS.
+Reside on the specific asset and only monitor systems internal to that asset.
+
+#### Anti-virus
+
+Inspect files for malware.
+Use signature-based detection to validate system files.
+
+#### Application Whitelisting
+
+Creates a list of what is known to be good.
+If it is not on the list, block it.
+The AWL only needs to be updated and tested when the applications used on the system are updated.
+
+#### External controls
+
+Required when it is simply not possible to use host-based security tools.
+
+External controls, such as Security Information and Event Management systems, may monitor a control system more holistically, using information available from other assets (such as a master terminal unit or HMI), from other information stores (such as a Data Historian), or from the network itself.
+
+#### Patch Management
+
+Risk, in the context of industrial security, can be thought of as a function of threats (actors, vectors, and targets) and how they exploit system vulnerabilities that result in some form of an undesirable consequence or impact.
+You can reduce risk by reducing any of these three mentioned components.
+
+##### Patching as a form of Vulnerability Management
+
+Addresses the notification, preparation, delivery, installation, and validation of software hotfixes or updates designed to correct uncovered deficiencies.
+Patch management, in the context of risk reduction, is a means of reducing vulnerabilities in an effort to reduce the resulting risk of a particular target.
+It is a “reactive” approach to security rather than a proactive offensive strategy.
+
+##### Leave no vulnerability unturned
+
+Try to mitigate every vulnerability present.
+If a network device, such as a Firewall is compromised, the whole network has to be assumed compromised.
+If a system such as one running Windows XP is present in the network, and cannot be further patched due to it not being further maintained, the workaround can be to encapsulate it and others which can't be updated in a "zone-based security zone"
+
+##### Maintaining System Availability
+
+##### Comprehensive Pre-deployment Testing
+
+Prior to deploying any patch, it is vital to thoroughly test and validate that the updates will not negatively impact the components being patched.
+
+1. Confirmation from the device manufacturer that a particular patch is acceptable to install. 
+
+The devices that are very old, cannot be simulated in the simulator, and therefore we cannot know if the patch will break them or not. 
+This leaves the vendor two options:
+
+* No not deploy the patch
+* Do not test the patch before deployment
+
+To minimize any negative impact to operations and system availability, end users should test ALL patches and updates before deployment.
+
+##### Automating the process
+
+As the ICS have been around since the 1980, vendor-specific implementations of patches and updates have been created.
+The patching management solution must be able to handle this diversity.
+
+This process has to be automated to provide a reasonable level of assurance.
+Group assets by criticality, duplicity and redundancy and allowing patches to be issued first to low-risk assets, then to medium risk, and finally to high-risk assets.
+Finally, critical servers are to be updated one by one.
+
+Backups have to be stored and saved.
+Versions and patches have to be taken note of.
+
+When updating firmware, it is important to have spare equipment at hand, because bricking may occur.
+
+### How much security is enough
+
+One of the most important factors to consider when deploying a security control is how it helps to reduce the risk of a cyber event from negatively impacting the ICS and the production assets under its control.
+A well thought out security program will always balance the “cost of security” versus the “cost of impact.”
