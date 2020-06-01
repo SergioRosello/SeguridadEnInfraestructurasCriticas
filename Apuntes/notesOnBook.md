@@ -2100,3 +2100,125 @@ When updating firmware, it is important to have spare equipment at hand, because
 
 One of the most important factors to consider when deploying a security control is how it helps to reduce the risk of a cyber event from negatively impacting the ICS and the production assets under its control.
 A well thought out security program will always balance the “cost of security” versus the “cost of impact.”
+
+# 11. Exception, Anomaly, and Threat Detection
+
+Exception reporting refers to an automated system that notifies the security administrators whenever a defined policy has been violated.
+
+Anomaly detection provides a rule-less method of identifying possible threat behaviour.
+
+## Exception reporting
+
+At a basic level, exception reporting might be used to inform an operator when something that should not have been allowed, has occurred. 
+
+![Exceptions 01](./Images/11 - Exceptions01.png)
+![Exceptions 02](./Images/11 - Exceptions02.png)
+
+Exceptions cannot be determined without an understanding of the policies that are in place.
+
+## Behavioral Anomaly Detection
+
+Network-expected behaviour but logically unexpected.
+
+We can check for this behaviour either manually (Logs) or automatically (SIEM) but we will always need a degree of human interaction.
+
+### Measuring baselines
+
+Baselines are time-lagged calculations based on running averages.
+They provide a base for comparison against expected value.
+Baselines are useful when comparing passed behaviour with current behaviour.
+Baselines can be as complex or as simple as you want them to be.
+A simple baseline would be to average a year's network traffic.
+Everything above the average, is prone to be due to market fluctuation or malign behaviour.
+
+![Baselines](./Images/11 - Baselinespng.png)
+
+### Anomaly Detection
+
+An anomaly is something that happens outside of normal defined parameters or boundaries of operation.
+They can be found in NBAD, log management and SIEM systems.
+
+The rate of false positives tends to be higher using anomaly detection techniques.
+
+![Anomalies 01](./Images/11 - Anomalies01.png)
+![Anomalies 02](./Images/11 - Anomalies02.png)
+
+## Behavioral Whitelisting
+
+Whitelists can be defined for a variety of network and security metrics, including users, assets, applications and others.
+
+### User whitelists
+
+It is very important to understand user activity, especially of administrative users.
+
+Authorized users have been previously identified, and therefore can be whitelisted.
+As with exception reporting, the whitelist is first defined and then monitored activity is compared against it.
+If the user is on the list, nothing happens.
+If the user is not on the list, it is assumed something bad, and the security personnel is notified.
+
+### Asset whitelists
+
+The list of allowed devices (Network scan / manual inventory) can be used to whitelist them.
+If a untrusted device is connected to the network, the IP address of the device will be detected by the network switches, routers and monitors and will eventually be seen in logs.
+At this point, comparison with the defined whitelist devices will render the device untrustworthy.
+
+### application whitelists
+
+Application behaviour can also be whitelisted but we have to be specially define the allowed behaviour.
+
+Some examples of application whitelisting features in industrial networks are:
+
+* Only read-only function codes are allowed
+* Only specifically defined function codes are allowed
+
+Unlike AWL systems that only allow certain authorised applications to execute, application behaviour whitelisting only allows applications authorised to execute to function in specific ways on the network.
+
+#### Smart-lists
+
+Combines the concept of behavioral whitelisting with a degree of deductive intelligence.
+Where blacklists block what is known to be bad, and whitelists only allow what is known to be good, Smart-lists use the latter to help dynamically define the former.
+
+![Smart-Lists](./Images/11 - Smartlists.png)
+
+## Threat detection
+
+For the detection of an incident (Vs a discrete event) it is necessary to look at multiple events together and search for broader patterns.
+The detection of this larger threat pattern is known as event correlation. 
+The problem is that event correlation systems where not designed to accommodate OT systems, presenting challenges in the detection of the most serious threats to an industrial network.
+
+### Event correlation
+
+Event correlation simplifies threat detection process by making sense of the massive amounts of discrete event data, analyzing it as a whole to find the important patterns and incidents that require immediate attention.
+
+### Data enrichment
+
+The process of appending or otherwise enhancing collected data with relevant context obtained from additional sources.
+(If a username is found within a application log, the username can be referenced against a central IAM system to obtain the user's actual name, departmental roles, privileges, and so on.)
+
+Data enrichment can occur in two ways:
+
+* Performing a lookup at the time of collection and appending the contextual information into the log.
+* Perform a lookup at the time the event is scrutinized by the SIEM or log management system.
+
+### Normalization
+
+Is a classification system that categorizes events according to a defined taxonomy, such as the Common Event Expression Framework provided by the MITRE Corporation.
+
+### Cross-Source Correlation
+
+Extend correlation across multiple sources, so that common events from disparate systems may be normalised and correlated together.
+
+### Tiered correlation 
+
+The use of one correlation rule within another correlation rule.
+
+![Tiered correlation](./Images/11 - tieredCorrelation.png)
+
+## Correlating between IT and OT systems
+
+The challenge here is the disparity between the two systems.
+IT systems are monitored heavily for performance and security whereas OT systems are monitored primarily for process efficiency and performance.
+
+To fully leverage the automated correlation capability built into most IT SIEM products, OT data must first be collected into the SIEM, and then the normalization of one metric to another must be made using a common threat taxonomy.
+
+![Correlation of IT and OT Systems](./Images/11 - CorrelationITOTSystems.png)
