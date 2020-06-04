@@ -2428,3 +2428,73 @@ Dependent on the nature of the data store, total data availability may be limite
 * Total number of rows
 * Rate at which information is inserted
 * Rate at which query results are required
+
+# 13. Standards and regulations
+
+The current state of ICS standards and regulations means there are many standards to adhere to.
+One of the most important ones is:  ISA 62443.
+
+## Common standards and regulations
+
+### NERC CIP
+
+Widely known due to the high price of non-compliance.
+It's target industry is the North American Bulk electric system
+
+### CFATS
+
+The RBPS for the CFATS outlines various controls for securing the cyber systems.
+
+1. Security policy
+2. Access Control
+3. Personnel security
+4. Awareness and training
+5. Monitoring and incident response
+6. Disaster recovery and business continuity
+7. System development and acquisition
+8. Configuration management
+9. Audits
+
+## ISO/IEC 27002
+
+Although it is less specific than ISO 27001, it maps specifically to standards from a lot more countries.
+
+## NIST SP 800-82 
+
+Provide recommendations for Security, Management, Operational and Technical controls in order to improve control system security.
+
+## ISA/IEC-62443
+
+Is a series of standards organised to address a series of topics necessary for the implementation of a secure Industrial Automation Control System (IACS)
+
+![ISA structure](./Images/11 - ISA.png)
+
+## Mapping industrial network security to compliance
+
+There are many ICS security regulations, guidances and recommendations.
+Organizations like the UCF (Unified Compliance Framework) work to unify these.
+
+## Industry best practices for conducting ICS assessments
+
+There are several documents published that discuss various methodologies for testing and assessing IT architecture.
+
+Some agencies that published documents:
+
+* Department of homeland security / Centre for protection of national infrastructure
+* National Security Agency
+* American Petroleum Institute / National petrochemical and refiners association
+* Institute for security and open methodologies (Spain)
+
+## Common criteria and FIPS standards
+
+Certify products rather than standards.
+The most important for information security is: FIPS 140-2, that validates information encryption
+
+### Common criteria
+
+Defines both functional and assurance requirements that security vendors can test against on order to validate the security of the product in question.
+
+### FIPS 140-2
+
+Establishes the requirements for the "cryptographic modules" that are used within a cyber asset or system.
+There are 4 models, each more thorough than the previous.
